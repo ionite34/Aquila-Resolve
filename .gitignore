@@ -1,6 +1,6 @@
 # Project Specific
 Aquila_Resolve/data/cache.db
-Aquila_Resolve/data/*.pt
+*.pt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
