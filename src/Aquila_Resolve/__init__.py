@@ -18,5 +18,6 @@ __version__ = "1.0.0"
 
 # Data module
 DATA_PATH = files(__name__ + '.data')
+MODELS_PATH = files(__name__ + '.models')
 # Iterable collection of all files in data.
 DATA_FILES = DATA_PATH.iterdir()

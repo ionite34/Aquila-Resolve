@@ -2,7 +2,7 @@ import math
 from typing import List, Union, Any
 
 
-def _product(probs: Union[None, List[float]]) -> float:
+def u_product(probs: Union[None, List[float]]) -> float:
     if probs is None or len(probs) == 0:
         return 0.
     if 0 in probs:
@@ -11,7 +11,7 @@ def _product(probs: Union[None, List[float]]) -> float:
     return prob
 
 
-def _batchify(input: List[Any], batch_size: int) -> List[List[Any]]:
+def u_batchify(input: List[Any], batch_size: int) -> List[List[Any]]:
     l = len(input)
     output = []
     for i in range(0, l, batch_size):

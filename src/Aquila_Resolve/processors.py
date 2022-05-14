@@ -20,33 +20,23 @@ class Processor:
         self._stem = g2p.stem
         # Number of times respective methods were called
         self.stat_hits = {
-            'plural': 0,
             'possessives': 0,
             'contractions': 0,
             'hyphenated': 0,
             'compound': 0,
-            'compound_l2': 0,
-            'stem': 0
+            'plural': 0,
+            'stem': 0,
+            'infer': 0
         }
         # Number of times respective methods returned value (not None)
         self.stat_resolves = {
-            'plural': 0,
             'possessives': 0,
             'contractions': 0,
             'hyphenated': 0,
             'compound': 0,
-            'compound_l2': 0,
-            'stem': 0
-        }
-        # Holds events when features encountered unexpected language syntax
-        self.stat_unexpected = {
-            'plural': [],
-            'possessives': [],
-            'contractions': [],
-            'hyphenated': [],
-            'compound': [],
-            'compound_l2': [],
-            'stem': []
+            'plural': 0,
+            'stem': 0,
+            'infer': 0
         }
 
     def auto_possessives(self, word: str) -> list | None:
@@ -123,11 +113,8 @@ class Processor:
         """
         # First, check if the word is a contraction
         parts = word.split("\'")  # Split on [']
-        if len(parts) == 1 or parts[1] not in {'ll', 'd'}:
+        if len(parts) != 2 or parts[1] not in {'ll', 'd'}:
             return None  # No contraction found
-        if len(parts) > 2:
-            self.stat_unexpected['contraction'] += word
-            return None  # More than 2 parts, can't be a contraction
         # If initial check passes, register a hit
         self.stat_hits['contractions'] += 1
 
@@ -327,83 +314,3 @@ class Processor:
                 ph_joined = ' '.join([ph_root, ph_ly])
                 self.stat_resolves['stem'] += 1
                 return ph_joined
-
-    def auto_component(self, word: str):
-        """
-        Searches for target word as component of a larger word
-        :param word:
-        :return:
-        """
-
-        """
-        This processing step checks for words as a component of a larger word
-        - i.e. 'synth' is not in the cmu dictionary
-        - Stage 1: We will search for any word beginning with 'synth' (10 matches)
-            - This is because most unseen short words are likely shortened versions
-            - We will split 
-        - Stage 2: Search for any word containing 'synth' (13 matches)
-        
-        """
-        raise NotImplementedError
-
-    def auto_compound_l2(self, word: str, recursive: bool = True) -> str | None:
-        """
-        Searches for target word as a compound word.
-        > Does not use n-gram splitting like auto_compound()
-        > Splits words manually into every possible combination
-        > Returns the match with the highest length of both words
-        :param recursive: True to enable recursive lookups, otherwise only use base CMU dictionary
-        :param word:
-        :return:
-        """
-        # Word must be fully alphabetic
-        if not word.isalpha() or len(word) < 3:
-            return None
-        self.stat_hits['compound_l2'] += 1  # Register hit
-
-        # Define lookup mode
-        def _lu(search_word: str) -> str | None:
-            if recursive:
-                return self._lookup(search_word, ph_format='sds')
-            else:
-                return self._cmu_get(search_word)
-
-        # Check if the last part is a single character
-        # And that it is repeated in the last char of the first part
-        # This is likely silent so remove it
-        # i.e. 'Derakk' -> 'Derak'
-        # If the word contains a repeated consonant at the end, remove it
-        # First check repeated last 2 letters
-        if word[-2:][0] == word[-2:][1]:
-            # Remove the last char from the word
-            word = word[:-1]
-
-        # Holds all matches as tuples
-        # (len1, len2, p1, p2, ph1, ph2)
-        matches = []
-
-        # Splits the word into every possible combination
-        for i in range(1, len(word)):
-            p1 = word[:i]
-            p2 = word[i:]
-            # Looks up both words
-            ph1 = _lu(p1)
-            if ph1 is None:
-                continue  # Skip if not found
-            ph2 = _lu(p2)
-            if ph2 is None:
-                continue  # Skip if not found
-            # If both words exist, add to list as tuple
-            matches.append((len(p1), len(p2), p1, p2, ph1, ph2))
-
-        # Pick the match with the highest length of both words
-        if len(matches) == 0:
-            return None
-        else:
-            # Sort by the minimum of len1 and len2
-            matches.sort(key=lambda x: min(x[0], x[1]))
-            # Get the highest minimum length match
-            match = matches[-1]
-            # Otherwise, return the full joined match
-            self.stat_resolves['compound_l2'] += 1  # Register resolve
-            return match[4] + ' ' + match[5]

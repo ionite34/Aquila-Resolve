@@ -5,7 +5,6 @@ from typing import Tuple, Dict, Any
 import torch
 import torch.nn as nn
 from torch.nn import TransformerEncoderLayer, LayerNorm, TransformerEncoder
-
 from .utils import get_dedup_tokens, _make_len_mask, _generate_square_subsequent_mask, PositionalEncoding
 from ..preprocessing.text import Preprocessor
 

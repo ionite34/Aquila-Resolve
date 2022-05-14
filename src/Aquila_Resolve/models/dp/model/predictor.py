@@ -3,11 +3,11 @@ from typing import Dict, List, Tuple
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
-from dp_infer import Prediction
-from dp_infer.model.model import load_checkpoint
-from dp_infer.model.utils import _get_len_util_stop
-from dp_infer.preprocessing.text import Preprocessor
-from dp_infer.preprocessing.utils import _batchify, _product
+from .. import Prediction
+from ..model.model import load_checkpoint
+from ..model.utils import _get_len_util_stop
+from ..preprocessing.text import Preprocessor
+from ..preprocessing.utils import u_batchify, u_product
 
 
 class Predictor:
@@ -73,7 +73,7 @@ class Predictor:
             output.append(Prediction(word=word,
                                      phonemes=''.join(out_phons),
                                      phoneme_tokens=out_phons_tokens,
-                                     confidence=_product(probs),
+                                     confidence=u_product(probs),
                                      token_probs=probs))
 
         return output
@@ -88,7 +88,7 @@ class Predictor:
         """
 
         predictions = dict()
-        text_batches = _batchify(texts, batch_size)
+        text_batches = u_batchify(texts, batch_size)
         for text_batch in text_batches:
             input_batch, lens_batch = [], []
             for text in text_batch:
