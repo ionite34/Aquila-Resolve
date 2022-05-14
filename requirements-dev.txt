@@ -2,3 +2,4 @@ tqdm~=4.64.0
 nltk~=3.7
 setuptools~=62.2.0
 pywordsegment>=0.2.1
+torch~=1.11.0
