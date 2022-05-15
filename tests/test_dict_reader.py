@@ -1,5 +1,5 @@
 import pytest
-from conftest import cmu_dict_content
+from .conftest import cmu_dict_content
 from Aquila_Resolve import dict_reader
 
 
