@@ -21,6 +21,6 @@ class Infer:
         :return: dict of {word: phonemes}
         """
         res = self.model.phonemise_list(words, lang=self.lang, batch_size=self.batch_size).phonemes
-        # Replace all occurrences of '][' with spaces
+        # Replace all occurrences of '][' with spaces, remove remaining brackets
         res = [r.replace('][', ' ').replace('[', '').replace(']', '') for r in res]
         return res
