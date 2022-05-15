@@ -22,7 +22,12 @@ def check_model() -> bool:
 
 
 def download(update: bool = True) -> bool:
-    """Downloads a file from a URL and saves it to a file_name"""
+    """
+    Downloads the model
+
+    :param update: True for download if checksum does not match, False for download if no file exists
+    :return: Existence or checksum match of model file
+    """
     # Check if the model is already downloaded
     if not update and _model.exists():
         return True
@@ -35,7 +40,9 @@ def download(update: bool = True) -> bool:
         with tqdm.wrapattr(r.raw, 'read', total=total_size, desc='Downloading model checkpoint') as raw:
             with _model.open('wb') as f:
                 shutil.copyfileobj(raw, f)
-    return _model.exists()  # Return existence of the model
+    if update:
+        return _model.exists() and check_model()  # Update flag, verify checksum also
+    return _model.exists()  # For no update flag, just check existence
 
 
 def ensure_download() -> None:
