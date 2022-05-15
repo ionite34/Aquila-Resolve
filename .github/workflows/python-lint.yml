@@ -1,0 +1,25 @@
+name: Python Lint Check
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '*.py'
+      - 'Aquila_Resolve/**'
+      - 'tests/**'
+      - '.github/workflows/python-lint.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '*.py'
+      - 'Aquila_Resolve/**'
+      - 'tests/**'
+      - '.github/workflows/python-lint.yml'
+
+jobs:
+  lint:
+    name: Python Lint Check
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v1
+      - uses: marian-code/python-lint-annotate@v3
