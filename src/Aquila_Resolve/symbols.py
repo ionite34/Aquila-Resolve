@@ -87,7 +87,7 @@ def to_full_type_tag(short_type_tag: str) -> str | None:
 
 
 def get_parent_pos(pos: str) -> str | None:
-    # Get the parent part of speech from a pos tag
+    """ Get parent POS tag of a POS tag. """
     if pos.startswith('VB'):
         return 'VERB'
     elif pos.startswith('NN'):
