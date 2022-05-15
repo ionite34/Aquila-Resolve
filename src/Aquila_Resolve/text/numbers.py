@@ -27,7 +27,8 @@ _ordinal_re = re.compile(r'[0-9]+(st|nd|rd|th)')
 _range_re = re.compile(r'(?<=[0-9])+(-)(?=[0-9])+.*?')
 _roman_re = re.compile(r'\b(?=[MDCLXVI]+\b)M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{2,3})\b')  # avoid I
 _multiply_re = re.compile(r'(\b[0-9]+)(x)([0-9]+)')
-_number_re = re.compile(r"[0-9]+'s|[0-9]+s|[0-9]+")
+# _number_re = re.compile(r"[0-9]+'s|[0-9]+s|[0-9]+")
+_number_re = re.compile(r"[0-9]+'s|[0-9]+s|(?<!\{)[0-9]+(?![\w\s]*[}])")
 
 
 def _remove_commas(m):
