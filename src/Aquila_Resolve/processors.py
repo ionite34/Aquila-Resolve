@@ -170,9 +170,9 @@ class Processor:
         parts = self._segment(word)
         if len(parts) == 1:
             return None  # No compound found
-        # If length of any part is 1, return None
+        # If length of any part is less than 3, return None
         for part in parts:
-            if len(part) == 1:
+            if len(part) < 3:
                 return None
         # If initial check passes, register a hit
         self.stat_hits['compound'] += 1
