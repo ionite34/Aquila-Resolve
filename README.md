@@ -3,11 +3,6 @@
 ### Augmented Recurrent Neural G2P with Inflectional Orthography.
 
 
-[![Python package](https://github.com/ionite34/h2p-parser/actions/workflows/python-package.yml/badge.svg)](https://github.com/ionite34/h2p-parser/actions/workflows/python-package.yml)
-[![CodeQL](https://github.com/ionite34/h2p-parser/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ionite34/h2p-parser/actions/workflows/codeql-analysis.yml)
-[![codecov](https://codecov.io/gh/ionite34/h2p-parser/branch/main/graph/badge.svg?token=AAJWXIG728)](https://codecov.io/gh/ionite34/h2p-parser)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser?ref=badge_shield)
-
 ## Overview
 
 Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
@@ -56,13 +51,11 @@ pip install deep-phonemizer
 
 Download the pretrained model: [en_us_cmudict_ipa_forward](https://public-asai-dl-models.s3.eu-central-1.amazonaws.com/DeepPhonemizer/en_us_cmudict_ipa_forward.pt)
 
-```python
-from dp.phonemizer import Phonemizer
-
-phonemizer = Phonemizer.from_checkpoint('en_us_cmudict_ipa.pt')
-phonemizer('Phonemizing an English text is imposimpable!', lang='en_us')
-
-'foʊnɪmaɪzɪŋ æn ɪŋglɪʃ tɛkst ɪz ɪmpəzɪmpəbəl!'
+```pycon
+>>> from Aquila_Resolve import G2p
+>>> g2p = G2p()
+>>> g2p.convert('I bought the book for $4.99, it was a good book to read.')
+>>> 
 ```
 
 ## Usage
@@ -101,5 +94,9 @@ line = CMUDictExt.convert("The cat read the book. It was a good book to read.")
 The code in this project is released under [Apache License 2.0](LICENSE).
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser?ref=badge_large)
+
+
+## References
+
 
 [^1]: First Footnote
