@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .models.dp.phonemizer import Phonemizer
 from .data import DATA_PATH
+from .data.remote import ensure_download, check_updates
 from .models import MODELS_PATH
 import sys
 
@@ -9,6 +10,8 @@ sys.path.insert(0, str(MODELS_PATH))
 
 class Infer:
     def __init__(self, device='cpu'):
+        ensure_download()  # Download checkpoint if necessary
+        check_updates()  # Check for checkpoint updates
         checkpoint_path = DATA_PATH.joinpath('model.pt')
         self.model = Phonemizer.from_checkpoint(checkpoint_path, device=device)
         self.lang = 'en_us'
