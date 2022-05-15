@@ -1,5 +1,5 @@
 import pytest
-from Aquila_Resolve import g2p
+from Aquila_Resolve import G2p
 
 cde_lines = [
     "The cat read the book. It was a good book to read.",
@@ -20,16 +20,16 @@ cde_expected_results = [
 
 # G2p Creation
 @pytest.fixture(scope='module')
-def cde() -> g2p.G2p:
-    instance = g2p.G2p()
-    assert isinstance(instance, g2p.G2p)
+def g2p() -> G2p:
+    instance = G2p(use_inference=False)
+    assert isinstance(instance, G2p)
     yield instance
 
 
 # Test Invalid Args
 def test_g2p_invalid_args():
     with pytest.raises(ValueError, match="Invalid value for unresolved_mode: invalid"):
-        g2p.G2p(unresolved_mode='invalid')
+        G2p(unresolved_mode='invalid')
 
 
 # Test for lookup method
@@ -41,13 +41,13 @@ def test_g2p_invalid_args():
     ('testers', ['T', 'EH1', 'S', 'T', 'ER0', 'Z']),
     ('testers(2)', ['T', 'EH1', 'S', 'T', 'AH0', 'Z']),
 ])
-def test_lookup(cde, word, phoneme):
-    assert cde.lookup(word, ph_format='list') == phoneme
-    assert cde.lookup(word, ph_format='sds') == ' '.join(phoneme)
-    assert cde.lookup(word, ph_format='sds_b') == '{' + ' '.join(phoneme) + '}'
+def test_lookup(g2p, word, phoneme):
+    assert g2p.lookup(word, ph_format='list') == phoneme
+    assert g2p.lookup(word, ph_format='sds') == ' '.join(phoneme)
+    assert g2p.lookup(word, ph_format='sds_b') == '{' + ' '.join(phoneme) + '}'
 
 
 # Test for convert method
 @pytest.mark.parametrize("line, ph_line", zip(cde_lines, cde_expected_results))
-def test_convert(cde, line, ph_line):
-    assert cde.convert(line) == ph_line
+def test_convert(g2p, line, ph_line):
+    assert g2p.convert(line) == ph_line

@@ -4,13 +4,19 @@ from Aquila_Resolve.processors import Processor
 
 
 @pytest.fixture(scope="module")
-def cde():
-    yield G2p()
+def g2p():
+    yield G2p(use_inference=False)
 
 
 @pytest.fixture(scope="module")
-def pc(cde):
-    yield Processor(cde)
+def pc(g2p):
+    yield Processor(g2p)
+
+
+@pytest.fixture(scope="module")
+def pc_inf():
+    g2p_inf = G2p(use_inference=True)
+    yield Processor(g2p_inf)
 
 
 # noinspection SpellCheckingInspection
@@ -88,6 +94,7 @@ def test_auto_plural(pc, word, expected):
     ("unkning", None),
     ("unkningly", None),
     ("unknly", None),
+    ("Cryoray", None),
     ("Codsly", "K AA1 D Z L IY0"),
     ("Divinationly", "D IH2 V AH0 N EY1 SH AH0 N L IY0"),
     ("Superfreezing", "S UW1 P ER0 F R IY1 Z IH0 NG"),
@@ -99,12 +106,11 @@ def test_auto_stem(pc, word, expected):
     assert result == expected
 
 
+# Test Inference
 # noinspection SpellCheckingInspection
 @pytest.mark.parametrize("word, expected", [
-    ("ABCUNKWN", None),
-    ("SuperFreeze", "S UW1 P ER0 F R IY1 Z"),
-    ("SuperDerakk", "S UW1 P ER0 D IY1 R AE1 K"),
+    ('Cryoray', 'K R IY1 OW0 R EY1'),
 ])
-def test_auto_compound_l2(pc, word, expected):
-    result = pc.auto_compound_l2(word)
+def test_inference(pc_inf, word, expected):
+    result = pc_inf.auto_compound(word)
     assert result == expected

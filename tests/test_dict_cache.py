@@ -2,7 +2,7 @@ import pytest
 import uuid
 import os
 from Aquila_Resolve import dict_cache
-from Aquila_Resolve import DATA_PATH
+from Aquila_Resolve.data import DATA_PATH
 
 
 # Fixture to generate a db file that will be cleared after test

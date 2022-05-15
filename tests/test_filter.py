@@ -29,10 +29,20 @@ def test_filter_text_lowercase(source, expected):
 # Test for invalid punctuation removal
 @pytest.mark.parametrize("source, expected", [
     ("w, case[s]?! 'Ts", "w, cases?! 'ts"),
-    (r"te@#$%^&*_+=[]{};:\"\/<>`~st", "test")
+    (r"te @#$%^&*_+=[]{T};:\"\/<>`~ st", "te {t} st")
 ])
 def test_filter_text_punctuation(source, expected):
     result = h2p_filter.filter_text(source)
+    assert result == expected
+
+
+# Test for preserve case mode
+@pytest.mark.parametrize("source, expected", [
+    ("TeST@", "TeST"),
+    (r"Te @#$%^&*_+=[]{T};:\"\/<>`~ sT", "Te {T} sT")
+])
+def test_filter_text_case(source, expected):
+    result = h2p_filter.filter_text(source, preserve_case=True)
     assert result == expected
 
 
