@@ -1,11 +1,8 @@
-# OOV Words Inference
 from __future__ import annotations
 from .models.dp.phonemizer import Phonemizer
 from .data import DATA_PATH
 from .models import MODELS_PATH
-import time
 import sys
-import re
 
 sys.path.insert(0, str(MODELS_PATH))
 
