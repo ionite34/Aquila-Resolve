@@ -13,11 +13,11 @@ from .h2p import replace_first
 from . import format_ph as ph
 from .dict_reader import DictReader
 from .text.numbers import normalize_numbers
-from .filter import filter_text, re_multi_space
+from .filter import filter_text
 from .processors import Processor
 from .dict_cache import DictCache
 from .infer import Infer
-from .symbols import contains_alpha, is_phoneme, brackets_match
+from .symbols import contains_alpha, brackets_match
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
