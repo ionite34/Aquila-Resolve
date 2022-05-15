@@ -98,7 +98,7 @@ def mock_dict_def(mocker) -> dictionary.Dictionary:
     # Create Dictionary object
     result = dictionary.Dictionary()
     assert isinstance(result, dictionary.Dictionary)
-    assert result.file_name == "dict.json"
+    assert result.file_name == "heteronyms.json"
     yield result
 
 
