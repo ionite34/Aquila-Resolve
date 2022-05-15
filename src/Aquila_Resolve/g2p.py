@@ -1,6 +1,7 @@
 # Extended Grapheme to Phoneme conversion using CMU Dictionary and Heteronym parsing.
 from __future__ import annotations
 import re
+import string
 from copy import deepcopy
 
 import pywordsegment
@@ -13,12 +14,15 @@ from .h2p import replace_first
 from . import format_ph as ph
 from .dict_reader import DictReader
 from .text.numbers import normalize_numbers
-from .filter import filter_text
+from .filter import filter_text, re_multi_space
 from .processors import Processor
 from .dict_cache import DictCache
+from .infer import Infer
+from .symbols import contains_alpha, is_phoneme, brackets_match
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
+re_phonemes = re.compile(r'\{.*?}')
 
 # Check that the nltk data is downloaded, if not, download it
 try:
@@ -30,9 +34,8 @@ except LookupError:
 
 
 class G2p:
-    def __init__(self, ph_format: str = 'sds_b', cmu_dict_path: str = None, h2p_dict_path: str = None,
-                 process_numbers: bool = True,
-                 unresolved_mode: str = 'keep'):
+    def __init__(self, device: str = 'cpu', ph_format: str = 'sds_b', process_numbers: bool = True, unresolved_mode: str = 'keep',
+                 use_inference: bool = True, cmu_dict_path: str = None, h2p_dict_path: str = None):
         # noinspection GrazieInspection
         """
         Grapheme to Phoneme conversion
@@ -71,6 +74,10 @@ class G2p:
         self.p = Processor(self)  # Processor for processing text
         self.cache = DictCache()  # Cache for storing processed text
 
+        # Inference
+        self.use_inference = use_inference
+        self.infer = Infer(device=device)
+
         # Morphic Resolution Features
         # Searches for depluralized form of words
         self.ft_auto_plural = True
@@ -85,8 +92,6 @@ class G2p:
         # Analyzes word root stem and infers pronunciation separately
         # i.e. 'generously' -> 'generous' + 'ly'
         self.ft_stem = True
-        # Forces compound words using manual lookup
-        self.ft_auto_compound_l2 = False
 
     def format_as(self, in_phoneme, override_format=None):
         cur_form = self.ph_format
@@ -135,11 +140,18 @@ class G2p:
             if entry is not None:
                 # Check the feature source and increment the feature count
                 if entry[1] is not None:
-                    # Remove the leading 'auto_' from the feature name
-                    feature = entry[1][5:]
-                    self.p.stat_hits[feature] += 1
-                    self.p.stat_resolves[feature] += 1
+                    self.p.stat_hits[entry[1]] += 1
+                    self.p.stat_resolves[entry[1]] += 1
                 return self.format_as(entry[0], ph_format)
+
+        # Check for hyphenated words
+        if self.ft_auto_hyphenated:
+            res = self.p.auto_hyphenated(word)
+            if res is not None:
+                res = self.format_as(res, ph_format)
+                if cache:
+                    self.cache.add(word, res, 'hyphenated')
+                return res
 
         # Auto Possessive Processor
         if self.ft_auto_pos:
@@ -148,7 +160,7 @@ class G2p:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_possessives')
+                    self.cache.add(word, res, 'possessives')
                 return res
 
         # Auto Contractions for "ll" or "d"
@@ -158,16 +170,7 @@ class G2p:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_contractions')
-                return res
-
-        # Check for hyphenated words
-        if self.ft_auto_hyphenated:
-            res = self.p.auto_hyphenated(word)
-            if res is not None:
-                res = self.format_as(res, ph_format)
-                if cache:
-                    self.cache.add(word, res, 'auto_hyphenated')
+                    self.cache.add(word, res, 'contractions')
                 return res
 
         # Check for compound words
@@ -177,7 +180,7 @@ class G2p:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_compound')
+                    self.cache.add(word, res, 'compound')
                 return res
 
         # No entry, detect if this is a multi-word entry
@@ -211,7 +214,7 @@ class G2p:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_plural')
+                    self.cache.add(word, res, 'plural')
                 return res
 
         # Stem check
@@ -226,17 +229,17 @@ class G2p:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_stem')
+                    self.cache.add(word, res, 'stem')
                 return res
 
-        # Force compounding
-        if self.ft_auto_compound_l2:
-            res = self.p.auto_compound_l2(word)
-            if res is not None:
+        # Inference
+        if self.use_inference:
+            res = self.infer([word])
+            if res[0] is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
                 if cache:
-                    self.cache.add(word, res, 'auto_compound_l2')
+                    self.cache.add(word, res, 'inference')
                 return res
 
         # If not found
@@ -251,6 +254,11 @@ class G2p:
         :type: str
         """
 
+        # Check that every {} bracket is paired
+        check = brackets_match(text)
+        if check is not None:
+            raise ValueError(check)
+
         # Check valid unresolved_mode argument
         if self.unresolved_mode not in ['keep', 'remove', 'drop']:
             raise ValueError('Invalid value for unresolved_mode: {}'.format(self.unresolved_mode))
@@ -259,6 +267,7 @@ class G2p:
         # Normalize numbers, if enabled
         if self.process_numbers:
             text = normalize_numbers(text)
+
         # Filter and Tokenize
         f_text = filter_text(text, preserve_case=True)
         words = self.h2p.tokenize(f_text)
@@ -266,10 +275,19 @@ class G2p:
         tags = self.h2p.get_tags(words)
 
         # Loop through words and pos tags
+        in_bracket = False  # Flag for in phoneme escape bracket
         for word, pos in tags:
-            # Skip punctuation
-            if word == '.':
+            # Check valid
+            if in_bracket:
+                if word == '}':
+                    in_bracket = False
                 continue
+            if not in_bracket and word == '{':
+                in_bracket = True
+                continue
+            if not contains_alpha(word):
+                continue
+
             # If word not in h2p dict, check CMU dict
             if not self.h2p.dict.contains(word):
                 entry = self.lookup(word, pos)
