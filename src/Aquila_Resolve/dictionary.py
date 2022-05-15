@@ -4,7 +4,7 @@ from __future__ import annotations
 from os.path import exists
 import json
 from .symbols import get_parent_pos
-from . import DATA_PATH
+from .data import DATA_PATH
 
 
 # Dictionary class

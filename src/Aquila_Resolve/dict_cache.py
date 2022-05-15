@@ -6,7 +6,7 @@ import sqlite3
 from sqlite3 import Error
 from typing import Any, Tuple
 from . import format_ph
-from . import DATA_PATH
+from .data import DATA_PATH
 
 
 class DictCache:

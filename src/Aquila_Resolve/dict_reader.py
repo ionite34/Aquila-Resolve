@@ -4,7 +4,7 @@ import re
 from tqdm import tqdm
 
 from .format_ph import to_list
-from . import DATA_PATH
+from .data import DATA_PATH
 
 _dict_primary = 'cmudict.dict'
 
