@@ -26,7 +26,7 @@ class Processor:
             'compound': 0,
             'plural': 0,
             'stem': 0,
-            'infer': 0
+            'inference': 0
         }
         # Number of times respective methods returned value (not None)
         self.stat_resolves = {
@@ -36,7 +36,7 @@ class Processor:
             'compound': 0,
             'plural': 0,
             'stem': 0,
-            'infer': 0
+            'inference': 0
         }
 
     def auto_possessives(self, word: str) -> list | None:
