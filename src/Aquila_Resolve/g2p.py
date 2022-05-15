@@ -1,7 +1,6 @@
 # Extended Grapheme to Phoneme conversion using CMU Dictionary and Heteronym parsing.
 from __future__ import annotations
 import re
-import string
 from copy import deepcopy
 
 import pywordsegment
