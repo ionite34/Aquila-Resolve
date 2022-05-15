@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import time
 
-from h2p_parser import cmudictext
-from h2p_parser.filter import filter_text
-from h2p_parser.text.numbers import normalize_numbers
-from h2p_parser.symbols import punctuation
+from .. import g2p
+from ..filter import filter_text
+from ..text.numbers import normalize_numbers
+from ..symbols import punctuation
 
 # Reads a file into a list of lines
 from tqdm import tqdm
