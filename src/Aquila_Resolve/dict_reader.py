@@ -3,7 +3,7 @@ import re
 
 from tqdm import tqdm
 
-import h2p_parser.format_ph as ph
+from .format_ph import to_list
 from . import DATA_PATH
 
 _dict_primary = 'cmudict.dict'
@@ -89,7 +89,7 @@ class DictReader:
 
             word = str.lower(pairs[0])  # Get word and lowercase it
             # Convert to list of phonemes
-            phonemes = ph.to_list(pairs[1])
+            phonemes = to_list(pairs[1])
             phonemes = [phonemes]  # Wrap in nested list
             word_num = 0
             word_orig = None
