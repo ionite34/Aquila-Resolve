@@ -6,7 +6,7 @@ on:
     paths:
       - '*.py'
       - 'requirements.txt'
-      - 'Aquila_Resolve/**'
+      - 'src/**'
       - 'tests/**'
       - '.github/workflows/python-package.yml'
   pull_request:
@@ -14,7 +14,7 @@ on:
     paths:
       - '*.py'
       - 'requirements.txt'
-      - 'Aquila_Resolve/**'
+      - 'src/**'
       - 'tests/**'
       - '.github/workflows/python-package.yml'
 

@@ -5,14 +5,14 @@ on:
     branches: [ main ]
     paths:
       - '*.py'
-      - 'Aquila_Resolve/**'
+      - 'src/**'
       - 'tests/**'
       - '.github/workflows/python-lint.yml'
   pull_request:
     branches: [ main ]
     paths:
       - '*.py'
-      - 'Aquila_Resolve/**'
+      - 'src/**'
       - 'tests/**'
       - '.github/workflows/python-lint.yml'
 
