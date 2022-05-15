@@ -4,7 +4,7 @@ import unittest.mock as mock
 from Aquila_Resolve import dictionary
 from Aquila_Resolve import dict_reader
 from Aquila_Resolve.h2p import H2p
-
+from Aquila_Resolve import download
 
 file_mock_path = "path/to/custom_dict.json"
 file_mock_content = """
@@ -53,6 +53,11 @@ cmu_dict_content = [
     "CONSOLE  K AA1 N S OW0 L",
     "CONSOLE(1)  K AH0 N S OW1 L"
 ]
+
+
+# Setup to ensure model is downloaded
+def pytest_sessionstart(session):
+    assert download() is True
 
 
 # noinspection PyUnusedLocal
