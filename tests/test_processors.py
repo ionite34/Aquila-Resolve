@@ -31,8 +31,6 @@ def pc_inf():
 ])
 def test_auto_possessives(pc, word, expected):
     result = pc.auto_possessives(word)
-    if result is not None:
-        result = " ".join(result)
     assert result == expected
 
 
@@ -46,8 +44,6 @@ def test_auto_possessives(pc, word, expected):
 ])
 def test_auto_contractions(pc, word, expected):
     result = pc.auto_contractions(word)
-    if result is not None:
-        result = " ".join(result)
     assert result == expected
 
 
@@ -84,8 +80,6 @@ def test_auto_compound(pc, word, expected):
 ])
 def test_auto_plural(pc, word, expected):
     result = pc.auto_plural(word)
-    if result is not None:
-        result = " ".join(result)
     assert result == expected
 
 
