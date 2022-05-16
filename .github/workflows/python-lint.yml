@@ -9,7 +9,14 @@ on:
 jobs:
   lint:
     name: Python Lint Check
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: marian-code/python-lint-annotate@v3
+        with:
+          python-root-list: "src/* tests/*"
+          use-pycodestyle: false
+          use-mypy: true
+          use-vulture: true
+          extra-pylint-options: "--output-format="colorized"
+          python-version: "3.10"
