@@ -41,6 +41,10 @@ jobs:
       run: |
         python -m pip install -r requirements-dev.txt
 
+    - name: Install Package
+      run: |
+        python -m pip install -e .
+
     - name: Generate Report
       run: |
         python -m pytest --cov=./src/Aquila_Resolve/ --cov-report=xml --cov-fail-under=50
