@@ -3,20 +3,8 @@ name: Python Package
 on:
   push:
     branches: [ main ]
-    paths:
-      - '*.py'
-      - 'requirements.txt'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/python-package.yml'
   pull_request:
     branches: [ main ]
-    paths:
-      - '*.py'
-      - 'requirements.txt'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/python-package.yml'
 
 jobs:
   build:

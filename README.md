@@ -1,62 +1,73 @@
-# Aquila Resolve - Grapheme-to-Phoneme
+# Aquila Resolve - Grapheme-to-Phoneme Converter
 
-### Augmented Recurrent Neural G2P with Inflectional Orthography.
+[![Python Package](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml)
 
+### Augmented Recurrent Neural G2P with Inflectional Orthography
 
-## Overview
-
-Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
-pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
-typically require a G2P converter for both training and inference.
-
-In evaluation[^1], neural G2P models have traditionally been extremely sensitive to orthographical variations
-in graphemes. Furthermore, attention-based mapping of contextual recognition has been poor for languages
-like English with a low correlative relationship between grapheme and phonemes.
-
-Aquila Resolve presents an easy-to-use framework for accurate and efficient English G2P resolution. 
+Aquila Resolve presents a new approach to accurate and efficient English G2P resolution. 
 Input text graphemes are translated into their phonetic pronunciations, 
-using [ARPAbet](https://wikipedia.org/wiki/ARPABET) as the [phoneme symbol set]().
+using [ARPAbet](https://wikipedia.org/wiki/ARPABET) as the [phoneme symbol set](#Symbol-Set).
 The pipeline employs a context layer, multiple transformer and n-gram morpho-orthographical search layers, 
 and an autoregressive recurrent neural transformer base.
 
 The current implementation offers state-of-the-art accuracy for out-of-vocabulary (OOV) words, as well as contextual
 analysis for correct inferencing of [English Heteronyms](https://en.wikipedia.org/wiki/Heteronym_(linguistics)).
 
-### State-of-the-art Accuracy ##
+### Model Overview
 
-> 
+Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
+pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
+typically require from a G2P conversion method for both training and inference.
 
-### Supports English Heteronyms using Contextual Part-of-Speech
+In evaluation[^1], neural G2P models have traditionally been extremely sensitive to orthographical variations
+in graphemes. Attention-based mapping of contextual recognition has traditionally been poor for languages
+like English with a low correlative relationship between grapheme and phonemes[^2]. Furthermore, both static
+methods (i.e. [CMU Dictionary](https://github.com/cmusphinx/cmudict)), and dynamic methods (i.e. 
+[G2p-seq2seq](https://github.com/cmusphinx/g2p-seq2seq), 
+[Phonetisaurus](https://github.com/AdolfVonKleist/Phonetisaurus), 
+[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer)) 
+incur a loss of sentence context during tokenization for training and inference, and therefore make it impossible 
+to accurately resolve words with multiple pronunciations based on grammatical context 
+[(Heteronyms)](https://wikipedia.org/wiki/Heteronym_(linguistics)).
 
-> 
+This model attempts to address these issues to optimize inference accuracy and run-time speed. The current architecture
+employs additional natural language analysis steps, including Part-of-speech (POS) tagging, n-gram segmentation, 
+lemmatization searches, and word stem analysis. Some layers are universal for all text, such as POS tagging,
+while others are activated when deemed required for the requested word. Layer information is retained with the token
+in vectorized and tensor operations. This allows morphological variations of seen words, such as plurals, possessives,
+compounds, inflectional stem affixes, and lemma variations to be resolved with near ground-truth level of accuracy.
+This also improves out-of-vocabulary (OOV) inferencing accuracy, by truncating individual tensor size and
+characteristics to be closer to seen data. 
 
-### Optimized for Speed
+The inferencing layer is built as an autoregressive implementation of the forward
+[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer) model, as a 4-layer transformer with 256 hidden units. 
+The [pre-trained checkpoint](https://huggingface.co/ionite/Aquila-Resolve/blob/main/model.pt) for Aquila Resolve 
+is trained using the CMU Dict v0.7b corpus, with 126,456 unique words. The validation dataset was split as a 
+uniform 5% sample of unique words, sorted by grapheme length. The learning rate was linearly increased during 
+the warmup steps, and step-decreased during fine-tuning.
 
-### Fast parsing of English Heteronyms to Phonemes using contextual part-of-speech.
-
-Provides the ability to convert heteronym graphemes to their phonetic pronunciations.
-
-Designed to be used in conjunction with other fixed grapheme-to-phoneme dictionaries such as [`CMUdict`](https://github.com/cmusphinx/cmudict)
-
-This package also offers a combined Grapheme-to-Phoneme dictionary,
-combining the functionality of fixed lookups handled by CMUdict and context-based parsing as
-offered by this module.
 
 ## Installation
 
 ```bash
 pip install aquila-resolve
 ```
+> A pre-trained [model checkpoint](https://huggingface.co/ionite/Aquila-Resolve/blob/main/model.pt) (~106 MB) will be
+> automatically downloaded on the first use of relevant public methods that require inferencing. For example,
+> when [instantiating `G2p`](#Usage). You can also start this download manually by calling `Aquila_Resolve.download()`.
+> 
+> If you are in an environment where remote file downloads are not possible, you can also download the checkpoint 
+> manually and instantiate `G2p` with the flag: `G2p(custom_checkpoint='path/model.pt')`
 
 ## Usage
 
-```pycon
+```python
 from Aquila_Resolve import G2p
 
 g2p = G2p(device='cuda')
 
 g2p.convert('The book costs $5, will you read it?')
->>> '{DH AH0} {B UH1 K} {K AA1 S T S} {F AY1 V} {D AA1 L ER0 Z}, {W IH1 L} {Y UW1} {R IY1 D} {IH1 T}?'
+# >> '{DH AH0} {B UH1 K} {K AA1 S T S} {F AY1 V} {D AA1 L ER0 Z}, {W IH1 L} {Y UW1} {R IY1 D} {IH1 T}?'
 ```
 
 > Additional optional parameters are available when defining a `G2p` instance:
@@ -69,7 +80,6 @@ g2p.convert('The book costs $5, will you read it?')
 | `h2p_dict_path`    | `None`   | Path to a custom Heteronyms Dictionary `.json` file. See [heteronyms.json](src/Aquila_Resolve/data/heteronyms.json) for the expected format.                                                                            |
 | `cmu_multi_mode`   | `0`      | Default selection index for CMUDict entries with multiple pronunciations as donated by the `(1)` or `(n)` format                                                                                                        |
 | `process_numbers`  | `True`   | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered.                                                |
-| `phoneme_brackets` | `True`   | Surrounds phonetic words with curly brackets i.e. `{R IY1 D}`                                                                                                                                                           |
 | `unresolved_mode`  | `'keep'` | Unresolved word resolution modes: <br> `keep` - Keeps the text-form word in the output. <br> `remove` - Removes the text-form word from the output. <br> `drop` - Returns the line as `None` if any word is unresolved. |
 
 ## Symbol Set
@@ -98,10 +108,12 @@ g2p.convert('The book costs $5, will you read it?')
 
 The code in this project is released under [Apache License 2.0](LICENSE).
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2Fh2p-parser?ref=badge_large)
-
 
 ## References
 
 
-[^1]: First Footnote~~
+[^1]: [r-G2P: Evaluating and Enhancing Robustness of Grapheme to Phoneme Conversion by Controlled noise introducing 
+and Contextual information incorporation](https://arxiv.org/abs/2202.11194)
+
+[^2]: [OTEANN: Estimating the Transparency of Orthographies with an Artificial 
+Neural Network](https://arxiv.org/abs/1912.13321)

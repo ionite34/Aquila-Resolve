@@ -33,7 +33,8 @@ except LookupError:
 
 
 class G2p:
-    def __init__(self, device: str = 'cpu', ph_format: str = 'sds_b', process_numbers: bool = True, unresolved_mode: str = 'keep',
+    def __init__(self, device: str = 'cpu', ph_format: str = 'sds_b', process_numbers: bool = True,
+                 unresolved_mode: str = 'keep',
                  use_inference: bool = True, cmu_dict_path: str = None, h2p_dict_path: str = None):
         # noinspection GrazieInspection
         """
@@ -92,7 +93,7 @@ class G2p:
         # i.e. 'generously' -> 'generous' + 'ly'
         self.ft_stem = True
 
-    def format_as(self, in_phoneme, override_format=None):
+    def format_as(self, in_phoneme: str, override_format=None):
         cur_form = self.ph_format
         if override_format is not None:
             cur_form = override_format
@@ -106,7 +107,7 @@ class G2p:
             raise ValueError(f'Invalid value for ph_format: {cur_form}')
         return output
 
-    def lookup(self, text: str, pos: str = None, cache: bool = True, ph_format=None) -> str | list | None:
+    def lookup(self, text: str, pos: str = None, use_cache: bool = True, ph_format=None) -> str | list | None:
         # noinspection GrazieInspection
         """
         Gets the CMU Dictionary entry for a word.
@@ -117,7 +118,7 @@ class G2p:
         - 'sds_b' space delimited string with curly brackets
         - 'list' list of phoneme strings
 
-        :param cache: If True, uses a cache to speed up lookups.
+        :param use_cache: If True, uses a cache to speed up lookups.
         :param pos: Part of speech tag (Optional)
         :param ph_format: Format of the phonemes to return:
         :type: str
@@ -127,14 +128,16 @@ class G2p:
 
         # Get the CMU Dictionary entry for the word
         word = text.lower()
-        entry = deepcopy(self.dict.get(word))  # Ensure safe copy of entry
+        record = self.dict.get(word)
 
         # Has entry, return it directly
-        if entry is not None:
+        if record is not None:
+            entry = record.copy()
+            entry = ph.to_sds(entry)
             return self.format_as(entry, ph_format)
 
         # Check if cache has the entry
-        if cache:
+        if use_cache:
             entry = self.cache.get(word)
             if entry is not None:
                 # Check the feature source and increment the feature count
@@ -148,7 +151,7 @@ class G2p:
             res = self.p.auto_hyphenated(word)
             if res is not None:
                 res = self.format_as(res, ph_format)
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'hyphenated')
                 return res
 
@@ -158,7 +161,7 @@ class G2p:
             if res is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'possessives')
                 return res
 
@@ -168,7 +171,7 @@ class G2p:
             if res is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'contractions')
                 return res
 
@@ -178,7 +181,7 @@ class G2p:
             if res is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'compound')
                 return res
 
@@ -212,7 +215,7 @@ class G2p:
             if res is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'plural')
                 return res
 
@@ -227,17 +230,17 @@ class G2p:
             if res is not None:
                 res = self.format_as(res, ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'stem')
                 return res
 
         # Inference
         if self.use_inference:
-            res = self.infer([word])
-            if res[0] is not None:
-                res = self.format_as(res, ph_format)
+            infer_result = self.infer([word])
+            if infer_result[0] is not None:
+                res = self.format_as(infer_result[0], ph_format)
                 # Add to cache
-                if cache:
+                if use_cache:
                     self.cache.add(word, res, 'inference')
                 return res
 

@@ -1,7 +1,8 @@
 # Access and checks for remote data
-from warnings import warn
 import requests
 import shutil
+from warnings import warn
+from tqdm.auto import tqdm
 from . import DATA_PATH
 
 _model = DATA_PATH.joinpath('model.pt')
@@ -21,7 +22,12 @@ def check_model() -> bool:
 
 
 def download(update: bool = True) -> bool:
-    """Downloads a file from a URL and saves it to a file_name"""
+    """
+    Downloads the model
+
+    :param update: True for download if checksum does not match, False for download if no file exists
+    :return: Existence or checksum match of model file
+    """
     # Check if the model is already downloaded
     if not update and _model.exists():
         return True
@@ -30,12 +36,16 @@ def download(update: bool = True) -> bool:
     # Download the model
     with requests.get(_model_url, stream=True) as r:
         r.raise_for_status()  # Raise error for download failure
-        with _model.open('wb') as f:
-            shutil.copyfileobj(r.raw, f)
-    return _model.exists()  # Return existence of the model
+        total_size = int(r.headers.get('content-length', 0))
+        with tqdm.wrapattr(r.raw, 'read', total=total_size, desc='Downloading model checkpoint') as raw:
+            with _model.open('wb') as f:
+                shutil.copyfileobj(raw, f)
+    if update:
+        return _model.exists() and check_model()  # Update flag, verify checksum also
+    return _model.exists()  # For no update flag, just check existence
 
 
-def ensure_download():
+def ensure_download() -> None:
     """Ensures the model is downloaded"""
     if not download(update=False):
         raise RuntimeError("Model could not be downloaded. Visit "

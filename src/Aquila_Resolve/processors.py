@@ -39,7 +39,7 @@ class Processor:
             'inference': 0
         }
 
-    def auto_possessives(self, word: str) -> list | None:
+    def auto_possessives(self, word: str) -> str | None:
         """
         Auto-possessives
         :param word: Input of possible possessive word
@@ -68,18 +68,18 @@ class Processor:
         """
 
         # Method to return phoneme and increment stat
-        def _resolve(phoneme: list) -> list:
+        def _resolve(phoneme: str) -> str:
             self.stat_resolves['possessives'] += 1
             return phoneme
 
         core = word[:-2]  # Get core word without possessive
-        ph = self._lookup(core, ph_format='list')  # find core word using recursive search
+        ph = self._lookup(core, ph_format='sds')  # find core word using recursive search
         if ph is None:
             return None  # Core word not found
+        ph_list = ph.split(' ')  # Split phonemes into list
         # [Case 1]
-        if ph[-1] in {'S', 'Z', 'CH', 'JH', 'SH', 'ZH'}:
-            ph.append('IH0')
-            ph.append('Z')
+        if ph_list[-1] in {'S', 'Z', 'CH', 'JH', 'SH', 'ZH'}:
+            ph += ' IH0 Z'
             return _resolve(ph)
         # [Case 2]
         """
@@ -90,12 +90,12 @@ class Processor:
         To simplify matching, we will check for the listed single-letter variants and 'NG'
         and then check for any numbered variant
         """
-        if ph[-1] in {'B', 'D', 'G', 'M', 'N', 'R', 'L', 'NG'} or ph[-1][-1].isdigit():
-            ph += 'Z'
+        if ph_list[-1] in {'B', 'D', 'G', 'M', 'N', 'R', 'L', 'NG'} or ph_list[-1][-1].isdigit():
+            ph += ' Z'
             return _resolve(ph)
         # [Case 3]
-        if ph[-1] in ['P', 'T', 'K', 'TH']:
-            ph += 'S'
+        if ph_list[-1] in ['P', 'T', 'K', 'TH']:
+            ph += ' S'
             return _resolve(ph)
 
         return None  # No match found
@@ -121,15 +121,14 @@ class Processor:
         # Get the core word
         core = parts[0]
         # Get the phoneme for the core word recursively
-        ph = self._lookup(core, ph_format='list')
+        ph = self._lookup(core, ph_format='sds')
         if ph is None:
             return None  # Core word not found
         # Add the phoneme with the appropriate suffix
         if parts[1] == 'll':
-            ph.append('AH0')
-            ph.append('L')
+            ph += ' AH0 L'
         elif parts[1] == 'd':
-            ph.append('D')
+            ph += ' D'
         # Return the phoneme
         self.stat_resolves['contractions'] += 1
         return ph
@@ -154,11 +153,9 @@ class Processor:
             if ph_part is None:
                 return None  # Part not found
             ph.append(ph_part)
-        # Join the phonemes
-        ph = ' '.join(ph)
         # Return the phoneme
         self.stat_resolves['hyphenated'] += 1
-        return ph
+        return ' '.join(ph)
 
     def auto_compound(self, word: str) -> str | None:
         """
@@ -189,7 +186,7 @@ class Processor:
         self.stat_resolves['compound'] += 1
         return ph
 
-    def auto_plural(self, word: str, pos: str = None) -> list | None:
+    def auto_plural(self, word: str, pos: str = None) -> str | None:
         """
         Finds singular form of plurals and attempts to resolve separately
         Optionally a pos tag can be provided.
