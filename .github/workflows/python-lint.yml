@@ -3,18 +3,8 @@ name: Python Lint Check
 on:
   push:
     branches: [ main ]
-    paths:
-      - '*.py'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/python-lint.yml'
   pull_request:
     branches: [ main ]
-    paths:
-      - '*.py'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/python-lint.yml'
 
 jobs:
   lint:
