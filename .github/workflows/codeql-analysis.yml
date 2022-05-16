@@ -14,11 +14,6 @@ name: "CodeQL"
 on:
   push:
     branches: [ main ]
-    paths:
-      - '*.py'
-      - 'src/**'
-      - 'tests/**'
-      - '.github/workflows/codeql-analysis.yml'
   schedule:
     - cron: '45 3 * * 3'
 
