@@ -21,9 +21,9 @@ cde_expected_results = [
 # G2p Creation
 @pytest.fixture(scope='module')
 def g2p() -> G2p:
-    instance = G2p()
-    assert isinstance(instance, G2p)
-    yield instance
+    g2p = G2p()
+    assert isinstance(g2p, G2p)
+    yield g2p
 
 
 # Test for lookup method
