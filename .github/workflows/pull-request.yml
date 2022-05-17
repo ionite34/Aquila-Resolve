@@ -8,8 +8,7 @@ jobs:
   lint:
     uses: ./.github/workflows/python-lint.yml
   coverage:
-    needs: [ lint ]
     uses: ./.github/workflows/coverage.yml
   tests:
-    needs: [ coverage ]
+    needs: [ lint ]
     uses: ./.github/workflows/python-package.yml
