@@ -34,7 +34,7 @@ def test_check_model_fail(mocker):
     # Failure for local checksum mismatch
     mock_g_ch = mocker.MagicMock(return_value='wrong_checksum')
     mocker.patch('Aquila_Resolve.data.remote.get_checksum', mock_g_ch)
-    assert check_model() is False
+    assert remote.check_model() is False
     assert mock_g_ch.call_count == 1
 
 
