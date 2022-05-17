@@ -5,5 +5,8 @@ on:
     branches: [ main ]
 
 jobs:
+  lint:
+    uses: ./.github/workflows/python-lint.yml
   tests:
+    needs: [ lint ]
     uses: ./.github/workflows/python-package.yml
