@@ -117,7 +117,6 @@ The code in this project is released under [Apache License 2.0](LICENSE).
 
 ## References
 
-
 [^1]: [r-G2P: Evaluating and Enhancing Robustness of Grapheme to Phoneme Conversion by Controlled noise introducing 
 and Contextual information incorporation](https://arxiv.org/abs/2202.11194)
 
