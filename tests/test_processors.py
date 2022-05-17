@@ -4,19 +4,17 @@ from Aquila_Resolve.processors import Processor
 
 
 @pytest.fixture(scope="module")
-def g2p():
-    yield G2p(use_inference=False)
-
-
-@pytest.fixture(scope="module")
-def pc(g2p):
+def pc_no_inf():
+    g2p = G2p()
+    g2p.ft_infer = False
     yield Processor(g2p)
 
 
 @pytest.fixture(scope="module")
-def pc_inf():
-    g2p_inf = G2p(use_inference=True)
-    yield Processor(g2p_inf)
+def pc():
+    g2p = G2p()
+    assert g2p.ft_infer
+    yield Processor(g2p)
 
 
 # noinspection SpellCheckingInspection
@@ -29,8 +27,8 @@ def pc_inf():
     ("Hope's", "HH OW1 P S"),  # Case 3
     ("Ruth's", "R UW1 TH S"),
 ])
-def test_auto_possessives(pc, word, expected):
-    result = pc.auto_possessives(word)
+def test_auto_possessives(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_possessives(word)
     assert result == expected
 
 
@@ -42,8 +40,8 @@ def test_auto_possessives(pc, word, expected):
     ("Victory'd", "V IH1 K T ER0 IY0 D"),
     ("Such'd", "S AH1 CH D"),
 ])
-def test_auto_contractions(pc, word, expected):
-    result = pc.auto_contractions(word)
+def test_auto_contractions(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_contractions(word)
     assert result == expected
 
 
@@ -53,8 +51,8 @@ def test_auto_contractions(pc, word, expected):
     ("Get-a-toy", "G EH1 T AH0 T OY1"),
     ("G-to-P", "JH IY1 T UW1 P IY1"),
 ])
-def test_auto_hyphenated(pc, word, expected):
-    result = pc.auto_hyphenated(word)
+def test_auto_hyphenated(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_hyphenated(word)
     assert result == expected
 
 
@@ -65,8 +63,8 @@ def test_auto_hyphenated(pc, word, expected):
     ("JetBrains", "JH EH1 T B R EY1 N Z"),
     ("Superfreeze", "S UW1 P ER0 F R IY1 Z"),
 ])
-def test_auto_compound(pc, word, expected):
-    result = pc.auto_compound(word)
+def test_auto_compound(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_compound(word)
     assert result == expected
 
 
@@ -78,8 +76,8 @@ def test_auto_compound(pc, word, expected):
     ("MarkZeroes", "M AA1 R K Z IH1 R OW0 Z"),
     ("TrueCods", "T R UW1 K AA1 D Z"),
 ])
-def test_auto_plural(pc, word, expected):
-    result = pc.auto_plural(word)
+def test_auto_plural(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_plural(word)
     assert result == expected
 
 
@@ -95,8 +93,8 @@ def test_auto_plural(pc, word, expected):
     ("SuperDivining", "S UW1 P ER0 D IH0 V AY1 N IH0 NG"),
     ("SuperSuching", "S UW1 P ER0 S AH1 CH IH0 NG"),
 ])
-def test_auto_stem(pc, word, expected):
-    result = pc.auto_stem(word)
+def test_auto_stem(pc_no_inf, word, expected):
+    result = pc_no_inf.auto_stem(word)
     assert result == expected
 
 
@@ -105,6 +103,6 @@ def test_auto_stem(pc, word, expected):
 @pytest.mark.parametrize("word, expected", [
     ('Cryoray', 'K R IY1 OW0 R EY1'),
 ])
-def test_inference(pc_inf, word, expected):
-    result = pc_inf.auto_compound(word)
+def test_inference(pc, word, expected):
+    result = pc.auto_compound(word)
     assert result == expected
