@@ -12,9 +12,9 @@
 
 Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
 pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
-typically require from a G2P conversion method for both training and inference.
+typically require a G2P conversion method for both training and inference.
 
-Aquila Resolve presents a new approach to accurate and efficient English G2P resolution. 
+Aquila Resolve presents a new approach for accurate and efficient English G2P resolution. 
 Input text graphemes are translated into their phonetic pronunciations, 
 using [ARPAbet](https://wikipedia.org/wiki/ARPABET) as the [phoneme symbol set](#Symbol-Set).
 The pipeline employs a context layer, multiple transformer and n-gram morpho-orthographical search layers, 
