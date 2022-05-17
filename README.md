@@ -1,6 +1,11 @@
 # Aquila Resolve - Grapheme-to-Phoneme Converter
 
 [![Python Package](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml)
+[![CodeQL](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/ionite34/Aquila-Resolve/branch/main/graph/badge.svg?token=Y9DDMJ0C9A)](https://codecov.io/gh/ionite34/Aquila-Resolve)
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve?ref=badge_shield)
 
 ### Augmented Recurrent Neural G2P with Inflectional Orthography
 
