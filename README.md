@@ -4,6 +4,10 @@
 
 ### Augmented Recurrent Neural G2P with Inflectional Orthography
 
+Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
+pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
+typically require from a G2P conversion method for both training and inference.
+
 Aquila Resolve presents a new approach to accurate and efficient English G2P resolution. 
 Input text graphemes are translated into their phonetic pronunciations, 
 using [ARPAbet](https://wikipedia.org/wiki/ARPABET) as the [phoneme symbol set](#Symbol-Set).
@@ -12,40 +16,6 @@ and an autoregressive recurrent neural transformer base.
 
 The current implementation offers state-of-the-art accuracy for out-of-vocabulary (OOV) words, as well as contextual
 analysis for correct inferencing of [English Heteronyms](https://en.wikipedia.org/wiki/Heteronym_(linguistics)).
-
-### Model Overview
-
-Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
-pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
-typically require from a G2P conversion method for both training and inference.
-
-In evaluation[^1], neural G2P models have traditionally been extremely sensitive to orthographical variations
-in graphemes. Attention-based mapping of contextual recognition has traditionally been poor for languages
-like English with a low correlative relationship between grapheme and phonemes[^2]. Furthermore, both static
-methods (i.e. [CMU Dictionary](https://github.com/cmusphinx/cmudict)), and dynamic methods (i.e. 
-[G2p-seq2seq](https://github.com/cmusphinx/g2p-seq2seq), 
-[Phonetisaurus](https://github.com/AdolfVonKleist/Phonetisaurus), 
-[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer)) 
-incur a loss of sentence context during tokenization for training and inference, and therefore make it impossible 
-to accurately resolve words with multiple pronunciations based on grammatical context 
-[(Heteronyms)](https://wikipedia.org/wiki/Heteronym_(linguistics)).
-
-This model attempts to address these issues to optimize inference accuracy and run-time speed. The current architecture
-employs additional natural language analysis steps, including Part-of-speech (POS) tagging, n-gram segmentation, 
-lemmatization searches, and word stem analysis. Some layers are universal for all text, such as POS tagging,
-while others are activated when deemed required for the requested word. Layer information is retained with the token
-in vectorized and tensor operations. This allows morphological variations of seen words, such as plurals, possessives,
-compounds, inflectional stem affixes, and lemma variations to be resolved with near ground-truth level of accuracy.
-This also improves out-of-vocabulary (OOV) inferencing accuracy, by truncating individual tensor size and
-characteristics to be closer to seen data. 
-
-The inferencing layer is built as an autoregressive implementation of the forward
-[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer) model, as a 4-layer transformer with 256 hidden units. 
-The [pre-trained checkpoint](https://huggingface.co/ionite/Aquila-Resolve/blob/main/model.pt) for Aquila Resolve 
-is trained using the CMU Dict v0.7b corpus, with 126,456 unique words. The validation dataset was split as a 
-uniform 5% sample of unique words, sorted by grapheme length. The learning rate was linearly increased during 
-the warmup steps, and step-decreased during fine-tuning.
-
 
 ## Installation
 
@@ -82,6 +52,35 @@ g2p.convert('The book costs $5, will you read it?')
 | `process_numbers`  | `True`   | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered.                                                |
 | `unresolved_mode`  | `'keep'` | Unresolved word resolution modes: <br> `keep` - Keeps the text-form word in the output. <br> `remove` - Removes the text-form word from the output. <br> `drop` - Returns the line as `None` if any word is unresolved. |
 
+## Model Architecture
+
+In evaluation[^1], neural G2P models have traditionally been extremely sensitive to orthographical variations
+in graphemes. Attention-based mapping of contextual recognition has traditionally been poor for languages
+like English with a low correlative relationship between grapheme and phonemes[^2]. Furthermore, both static
+methods (i.e. [CMU Dictionary](https://github.com/cmusphinx/cmudict)), and dynamic methods (i.e. 
+[G2p-seq2seq](https://github.com/cmusphinx/g2p-seq2seq), 
+[Phonetisaurus](https://github.com/AdolfVonKleist/Phonetisaurus), 
+[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer)) 
+incur a loss of sentence context during tokenization for training and inference, and therefore make it impossible 
+to accurately resolve words with multiple pronunciations based on grammatical context 
+[(Heteronyms)](https://wikipedia.org/wiki/Heteronym_(linguistics)).
+
+This model attempts to address these issues to optimize inference accuracy and run-time speed. The current architecture
+employs additional natural language analysis steps, including Part-of-speech (POS) tagging, n-gram segmentation, 
+lemmatization searches, and word stem analysis. Some layers are universal for all text, such as POS tagging,
+while others are activated when deemed required for the requested word. Layer information is retained with the token
+in vectorized and tensor operations. This allows morphological variations of seen words, such as plurals, possessives,
+compounds, inflectional stem affixes, and lemma variations to be resolved with near ground-truth level of accuracy.
+This also improves out-of-vocabulary (OOV) inferencing accuracy, by truncating individual tensor size and
+characteristics to be closer to seen data. 
+
+The inferencing layer is built as an autoregressive implementation of the forward
+[DeepPhonemizer](https://github.com/as-ideas/DeepPhonemizer) model, as a 4-layer transformer with 256 hidden units. 
+The [pre-trained checkpoint](https://huggingface.co/ionite/Aquila-Resolve/blob/main/model.pt) for Aquila Resolve 
+is trained using the CMU Dict v0.7b corpus, with 126,456 unique words. The validation dataset was split as a 
+uniform 5% sample of unique words, sorted by grapheme length. The learning rate was linearly increased during 
+the warmup steps, and step-decreased during fine-tuning.
+
 ## Symbol Set
 
 > The 2 letter ARPAbet symbol set is used, with numbered vowel stress markers.
@@ -108,6 +107,7 @@ g2p.convert('The book costs $5, will you read it?')
 
 The code in this project is released under [Apache License 2.0](LICENSE).
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve?ref=badge_large)
 
 ## References
 
