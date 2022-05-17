@@ -1,7 +1,6 @@
 # Transformations of text sequences for matching
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from .symbols import consonants
 
 import re
 
@@ -73,7 +72,7 @@ class Processor:
             return phoneme
 
         core = word[:-2]  # Get core word without possessive
-        ph = self._lookup(core, ph_format='sds')  # find core word using recursive search
+        ph = self._lookup(core)  # find core word using recursive search
         if ph is None:
             return None  # Core word not found
         ph_list = ph.split(' ')  # Split phonemes into list
@@ -121,7 +120,7 @@ class Processor:
         # Get the core word
         core = parts[0]
         # Get the phoneme for the core word recursively
-        ph = self._lookup(core, ph_format='sds')
+        ph = self._lookup(core)
         if ph is None:
             return None  # Core word not found
         # Add the phoneme with the appropriate suffix
@@ -149,7 +148,7 @@ class Processor:
         # Get the phonemes for each part
         ph = []
         for part in parts:
-            ph_part = self._lookup(part, ph_format='sds')
+            ph_part = self._lookup(part)
             if ph_part is None:
                 return None  # Part not found
             ph.append(ph_part)
@@ -176,7 +175,7 @@ class Processor:
         # Get the phonemes for each part
         ph = []
         for part in parts:
-            ph_part = self._lookup(part, ph_format='sds')
+            ph_part = self._lookup(part)
             if ph_part is None:
                 return None  # Part not found
             ph.append(ph_part)
@@ -278,7 +277,7 @@ class Processor:
             # Get the root word
             root = word[:-2]
             # Recursively get the root
-            ph_root = self._lookup(root, ph_format='sds')
+            ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
                 ph_ly = 'L IY0'
@@ -291,7 +290,7 @@ class Processor:
             # Get the root word
             root = word[:-3]
             # Recursively get the root
-            ph_root = self._lookup(root, ph_format='sds')
+            ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
                 ph_ly = 'IH0 NG'
@@ -304,7 +303,7 @@ class Processor:
             # Get the root word, add [e]
             root = word[:-3] + 'e'
             # Recursively get the root
-            ph_root = self._lookup(root, ph_format='sds')
+            ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
                 ph_ly = 'IH0 NG'

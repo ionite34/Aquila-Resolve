@@ -21,15 +21,9 @@ cde_expected_results = [
 # G2p Creation
 @pytest.fixture(scope='module')
 def g2p() -> G2p:
-    instance = G2p(use_inference=False)
-    assert isinstance(instance, G2p)
-    yield instance
-
-
-# Test Invalid Args
-def test_g2p_invalid_args():
-    with pytest.raises(ValueError, match="Invalid value for unresolved_mode: invalid"):
-        G2p(unresolved_mode='invalid')
+    g2p = G2p()
+    assert isinstance(g2p, G2p)
+    yield g2p
 
 
 # Test for lookup method
@@ -42,9 +36,7 @@ def test_g2p_invalid_args():
     ('testers(2)', ['T', 'EH1', 'S', 'T', 'AH0', 'Z']),
 ])
 def test_lookup(g2p, word, phoneme):
-    assert g2p.lookup(word, ph_format='list') == phoneme
-    assert g2p.lookup(word, ph_format='sds') == ' '.join(phoneme)
-    assert g2p.lookup(word, ph_format='sds_b') == '{' + ' '.join(phoneme) + '}'
+    assert g2p.lookup(word) == ' '.join(phoneme)
 
 
 # Test for convert method

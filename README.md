@@ -3,10 +3,10 @@
 [![Build](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml)
 [![CodeQL](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/ionite34/Aquila-Resolve/branch/main/graph/badge.svg?token=Y9DDMJ0C9A)](https://codecov.io/gh/ionite34/Aquila-Resolve)
-
-[![Supported Versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue)]()
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve?ref=badge_shield)
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Aquila-Resolve)
+[![PyPI version](https://badge.fury.io/py/Aquila-Resolve.svg)](https://pypi.org/project/Aquila-Resolve/)
 
 ### Augmented Recurrent Neural G2P with Inflectional Orthography
 
@@ -40,7 +40,7 @@ pip install aquila-resolve
 ```python
 from Aquila_Resolve import G2p
 
-g2p = G2p(device='cuda')
+g2p = G2p()
 
 g2p.convert('The book costs $5, will you read it?')
 # >> '{DH AH0} {B UH1 K} {K AA1 S T S} {F AY1 V} {D AA1 L ER0 Z}, {W IH1 L} {Y UW1} {R IY1 D} {IH1 T}?'
@@ -51,12 +51,7 @@ g2p.convert('The book costs $5, will you read it?')
 | Parameter          | Default  | Description                                                                                                                                                                                                             |
 |--------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `device`           | `'cpu'`  | Device for Pytorch inference model                                                                                                                                                                                      |
-| `ph_format`        | `sds_b`  | Phoneme output format: <br> `sds` - Space delimited <br> `sds_b` Space delimited, with curly brackets <br> `list` List of individual phonemes                                                                           |
-| `cmu_dict_path`    | `None`   | Path to a custom CMUDict `.dict` file.                                                                                                                                                                                  |
-| `h2p_dict_path`    | `None`   | Path to a custom Heteronyms Dictionary `.json` file. See [heteronyms.json](src/Aquila_Resolve/data/heteronyms.json) for the expected format.                                                                            |
-| `cmu_multi_mode`   | `0`      | Default selection index for CMUDict entries with multiple pronunciations as donated by the `(1)` or `(n)` format                                                                                                        |
 | `process_numbers`  | `True`   | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered.                                                |
-| `unresolved_mode`  | `'keep'` | Unresolved word resolution modes: <br> `keep` - Keeps the text-form word in the output. <br> `remove` - Removes the text-form word from the output. <br> `drop` - Returns the line as `None` if any word is unresolved. |
 
 ## Model Architecture
 
@@ -93,20 +88,20 @@ the warmup steps, and step-decreased during fine-tuning.
 
 ### Vowels
 
-| Phoneme | Example            |     | Phoneme | Example            |     | Phoneme | Example               |     | Phoneme | Example |  
-|---------|--------------------|-----|---------|--------------------|-----|---------|-----------------------|-----|---------|---------|
-| AA0     | B<u>**al**</u>m    |     | AW0     | <u>**Ou**</u>rself |     | EY0     | Mayd<u>**ay**</u>     |     | OY0     |         |
-| AA1     | B<u>**o**</u>t     |     | AW1     | Sh<u>**ou**</u>t   |     | EY1     | M<u>**ay**</u>day     |     | OY1     |         |
-| AA2     | C<u>**o**</u>t     |     | AW2     | <u>**Ou**</u>tdo   |     | EY2     | airfr<u>**eigh**</u>t |     | OY2     |         |
-| AE0     | B<u>**a**</u>t     |     | AY0     | All<u>**y**</u>    |     | IH0     | Cook<u>**i**</u>ng    |     | UH0     |         |
-| AE1     | F<u>**a**</u>st    |     | AY1     | B<u>**i**</u>as    |     | IH1     | Ex<u>**i**</u>st      |     | UH1     |         |
-| AE2     | Midl<u>**a**</u>nd |     | AY2     | Alib<u>**i**</u>   |     | IH2     | Outf<u>**i**</u>t     |     | UH2     |         |
-| AH0     | Centr<u>**a**</u>l |     | EH0     | <u>**E**</u>nroll  |     | IY0     | Lad<u>**y**</u>       |     | UW0     |         |
-| AH1     | Ch<u>**u**</u>nk   |     | EH1     | Bl<u>**e**</u>ss   |     | IY1     | B<u>**ea**</u>k       |     | UW1     |         |
-| AH2     | Outc<u>**o**</u>me |     | EH2     | Tel<u>**e**</u>x   |     | IY2     | Turnk<u>**ey**</u>    |     | UW2     |         |
-| AO0     | St<u>**o**</u>ry   |     | ER0     | Chapt<u>**er**</u> |     | OW0     | Re<u>**o**</u>        |     |         |         |
-| AO1     | Ad<u>**o**</u>re   |     | ER1     | V<u>**er**</u>b    |     | OW1     | S<u>**o**</u>         |     |         |         |
-| AO2     | Bl<u>**o**</u>g    |     | ER2     | Catch<u>**er**</u> |     | OW2     | Carg<u>**o**</u>      |     |         |         |
+| Phoneme | Example       |     | Phoneme | Example       |     | Phoneme | Example          |     | Phoneme | Example |  
+|---------|---------------|-----|---------|---------------|-----|---------|------------------|-----|---------|---------|
+| AA0     | B***al***m    |     | AW0     | ***Ou***rself |     | EY0     | Mayd***ay***     |     | OY0     |         |
+| AA1     | B***o***t     |     | AW1     | Sh***ou***t   |     | EY1     | M***ay***day     |     | OY1     |         |
+| AA2     | C***o***t     |     | AW2     | ***Ou***tdo   |     | EY2     | airfr***eigh***t |     | OY2     |         |
+| AE0     | B***a***t     |     | AY0     | All***y***    |     | IH0     | Cook***i***ng    |     | UH0     |         |
+| AE1     | F***a***st    |     | AY1     | B***i***as    |     | IH1     | Ex***i***st      |     | UH1     |         |
+| AE2     | Midl***a***nd |     | AY2     | Alib***i***   |     | IH2     | Outf***i***t     |     | UH2     |         |
+| AH0     | Centr***a***l |     | EH0     | ***E***nroll  |     | IY0     | Lad***y***       |     | UW0     |         |
+| AH1     | Ch***u***nk   |     | EH1     | Bl***e***ss   |     | IY1     | B***ea***k       |     | UW1     |         |
+| AH2     | Outc***o***me |     | EH2     | Tel***e***x   |     | IY2     | Turnk***ey***    |     | UW2     |         |
+| AO0     | St***o***ry   |     | ER0     | Chapt***er*** |     | OW0     | Re***o***        |     |         |         |
+| AO1     | Ad***o***re   |     | ER1     | V***er***b    |     | OW1     | S***o***         |     |         |         |
+| AO2     | Bl***o***g    |     | ER2     | Catch***er*** |     | OW2     | Carg***o***      |     |         |         |
 
 
 ## License
