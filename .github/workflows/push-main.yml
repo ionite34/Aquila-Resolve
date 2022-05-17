@@ -10,5 +10,4 @@ jobs:
   coverage:
     uses: ./.github/workflows/coverage.yml
   tests:
-    needs: [ lint ]
     uses: ./.github/workflows/python-package.yml
