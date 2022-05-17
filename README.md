@@ -1,6 +1,6 @@
 # Aquila Resolve - Grapheme-to-Phoneme Converter
 
-[![Python Package](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml)
+[![Build](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml)
 [![CodeQL](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/ionite34/Aquila-Resolve/branch/main/graph/badge.svg?token=Y9DDMJ0C9A)](https://codecov.io/gh/ionite34/Aquila-Resolve)
 
@@ -116,7 +116,6 @@ The code in this project is released under [Apache License 2.0](LICENSE).
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fionite34%2FAquila-Resolve?ref=badge_large)
 
 ## References
-
 
 [^1]: [r-G2P: Evaluating and Enhancing Robustness of Grapheme to Phoneme Conversion by Controlled noise introducing 
 and Contextual information incorporation](https://arxiv.org/abs/2202.11194)
