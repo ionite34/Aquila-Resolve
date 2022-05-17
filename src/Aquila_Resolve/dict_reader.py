@@ -1,12 +1,7 @@
 # This reads a CMUDict formatted dictionary as a dictionary object
-import re
-
-from tqdm import tqdm
-
-from .format_ph import to_list
 from .data import DATA_PATH
 
-_dict_primary = 'cmudict.dict'
+_default = 'cmudict.dict'
 
 
 def read_dict(filename: str) -> list:
@@ -29,7 +24,7 @@ class DictReader:
         if filename is not None:
             self.dict = self.parse_from_file(filename)
         else:
-            with DATA_PATH.joinpath(_dict_primary) as f:
+            with DATA_PATH.joinpath(_default) as f:
                 self.dict = self.parse_from_file(f)
 
     def parse_from_file(self, filename: str) -> dict:
@@ -70,9 +65,9 @@ class DictReader:
 
         # Iterate over the lines
         for line in lines:
-            # Skip empty lines and lines with no space
+            # Skip empty lines
             line = line.strip()
-            if line == '':
+            if not line:
                 continue
 
             # Split depending on format
@@ -88,37 +83,7 @@ class DictReader:
                 raise ValueError('Unknown dictionary format')
 
             word = str.lower(pairs[0])  # Get word and lowercase it
-            # Convert to list of phonemes
-            phonemes = to_list(pairs[1])
-            phonemes = [phonemes]  # Wrap in nested list
-            word_num = 0
-            word_orig = None
-
-            # Detect if this is a multi-word entry
-            if ('(' in word) and (')' in word) and any(char.isdigit() for char in word):
-                # Parse the integer from the word using regex
-                result = int(re.findall(r"\((\d+)\)", word)[0])
-                # If found
-                if result is not None:
-                    # Set the original word
-                    word_orig = word
-                    # Remove the integer and bracket from the word
-                    word = re.sub(r"\(.*\)", "", word)
-                    # Set the word number to the result
-                    word_num = result
-
-            # Check existing key
-            if word in parsed_dict:
-                # If word number is 0, ignore
-                if word_num == 0:
-                    continue
-                # If word number is not 0, add phoneme to existing key at index
-                parsed_dict[word].extend(phonemes)
-                # Also add the original word if it exists
-                if word_orig is not None:
-                    parsed_dict[word_orig] = phonemes
-            else:
-                # Create a new key
-                parsed_dict[word] = phonemes
+            phonemes = str(pairs[1])  # Get phonemes
+            parsed_dict[word] = phonemes  # Store in dictionary
 
         return parsed_dict
