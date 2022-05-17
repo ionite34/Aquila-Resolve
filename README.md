@@ -1,6 +1,6 @@
 # Aquila Resolve - Grapheme-to-Phoneme Converter
 
-[![Python Package](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/python-package.yml)
+[![Build](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/push-main.yml)
 [![CodeQL](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ionite34/Aquila-Resolve/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/ionite34/Aquila-Resolve/branch/main/graph/badge.svg?token=Y9DDMJ0C9A)](https://codecov.io/gh/ionite34/Aquila-Resolve)
 
