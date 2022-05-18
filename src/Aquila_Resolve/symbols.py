@@ -98,35 +98,20 @@ def get_parent_pos(pos: str) -> str | None:
         return None
 
 
-def contains_alpha(s: str) -> bool:
-    # Check if a word contains an alpha character
-    return s.upper().isupper()
+def contains_alpha(text: str) -> bool:
+    """
+    Method to check if a string contains alphabetic characters.
+    :param text:
+    :return:
+    """
+    return text.upper().isupper()
 
 
-def is_phoneme(s: str) -> bool:
-    # Check if a word is a phoneme, detect brackets
-    return s.startswith('{') and s.endswith('}')
+def is_braced(word: str) -> bool:
+    """
+    Check if a word is surrounded by brace-markings {}.
 
-
-def brackets_match(s: str) -> str | None:
-    # Check if string contains brackets at all
-    if not ('{' in s or '}' in s):
-        return None  # Valid
-    index_opened = -1
-    in_bracket = False
-    for i in range(len(s)):
-        if not in_bracket:
-            if s[i] == '{':
-                in_bracket = True
-                index_opened = i
-            elif s[i] == '}':
-                return f'Unexpected close bracket at index {i} without open.'
-        else:
-            if s[i] == '}':
-                in_bracket = False
-            elif s[i] == '{':
-                return f'Unexpected nested open bracket at index {i}.'
-    if in_bracket:
-        return f'Bracket opened at index {index_opened} but was never closed.'
-    return None  # Valid
-
+    :param word: Word
+    :return: True if word is braced-marked.
+    """
+    return word.startswith('{') and word.endswith('}')
