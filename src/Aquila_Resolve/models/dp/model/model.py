@@ -16,7 +16,7 @@ class ModelType(Enum):
         """
         Returns: bool: Whether the model is autoregressive.
         """
-        return self in {ModelType.AUTOREG_TRANSFORMER}
+        return self in {ModelType.AUTOREG_TRANSFORMER}  # pragma: no cover
 
 
 class Model(torch.nn.Module, ABC):
@@ -65,42 +65,6 @@ class AutoregressiveTransformer(Model):
                                           num_decoder_layers=decoder_layers, dim_feedforward=d_fft,
                                           dropout=dropout, activation='relu')
         self.fc_out = nn.Linear(d_model, decoder_vocab_size)
-
-    def forward(self, batch: Dict[str, torch.Tensor]):         # shape: [N, T]
-        """
-        Foward pass of the model on a data batch.
-
-        Args:
-          batch (Dict[str, torch.Tensor]): Input batch with entries 'text' (text tensor) and 'phonemes'
-                                           (phoneme tensor for teacher forcing).
-
-        Returns:
-          Tensor: Predictions.
-        """
-
-        src = batch['text']
-        trg = batch['phonemes'][:, :-1]
-
-        src = src.transpose(0, 1)        # shape: [T, N]
-        trg = trg.transpose(0, 1)
-
-        trg_mask = _generate_square_subsequent_mask(len(trg)).to(trg.device)
-
-        src_pad_mask = _make_len_mask(src).to(trg.device)
-        trg_pad_mask = _make_len_mask(trg).to(trg.device)
-
-        src = self.encoder(src)
-        src = self.pos_encoder(src)
-
-        trg = self.decoder(trg)
-        trg = self.pos_decoder(trg)
-
-        output = self.transformer(src, trg, src_mask=None, tgt_mask=trg_mask,
-                                  memory_mask=None, src_key_padding_mask=src_pad_mask,
-                                  tgt_key_padding_mask=trg_pad_mask, memory_key_padding_mask=src_pad_mask)
-        output = self.fc_out(output)
-        output = output.transpose(0, 1)
-        return output
 
     @torch.jit.export
     def generate(self,
