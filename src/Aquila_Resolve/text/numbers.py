@@ -92,7 +92,7 @@ def _expand_measurement(m):
     _, number, measurement = re.split(r'(\d+(?:\.\d+)?)', m.group(0))
     number = _inflect.number_to_words(number)
     measurement = "".join(measurement.split())
-    measurement = _measurements_key[measurement.lower()]
+    measurement = _measurements_key.get(measurement.lower(), measurement)
     # if measurement is plural, and number is singular, remove the 's'
     if number == "one" and str.endswith(measurement, "s"):
         # Remove the 's' from the end of the measurement
