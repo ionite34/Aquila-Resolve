@@ -4,6 +4,7 @@ import re
 def replace_first(target: str, replacement: str, text: str) -> str:
     """
     Use Regex to replace the first instance of a word
+
     Words within braces are ignored (e.g. '{word} is ignored')
 
     :param target: The word to be replaced
