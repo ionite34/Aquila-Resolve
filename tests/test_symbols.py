@@ -36,3 +36,25 @@ def test_get_parent_pos_verb(tag, expected):
 def test_get_parent_pos_invalid_tag():
     # If the pos tag is not in the list, expect None
     assert symbols.get_parent_pos('XYZ') is None
+
+
+@pytest.mark.parametrize('case, exp', [
+    ('ABC', True),
+    ('abc', True),
+    ('0', False),
+    ('1A', True),
+    ('1@$%&', False),
+    ('@a$%&', True),
+])
+def test_contains_alpha(case, exp):
+    assert symbols.contains_alpha(case) == exp
+
+
+@pytest.mark.parametrize('case, exp', [
+    ('word', False),
+    ('{AH0}', True),
+    ('{C AH0 T}', True),
+    ('In {AH0} line.', False),
+])
+def test_is_phoneme(case, exp):
+    assert symbols.is_braced(case) == exp

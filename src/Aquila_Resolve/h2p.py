@@ -1,27 +1,18 @@
-import nltk
-import re
 from nltk.tokenize import TweetTokenizer
 from nltk import pos_tag
 from nltk import pos_tag_sents
 from .dictionary import Dictionary
 from .filter import filter_text as ft
+from .text.replace import replace_first
 from . import format_ph as ph
 
-# Check that the nltk data is downloaded, if not, download it
+# Check required nltk data exists, if not, download it
 try:
-    nltk.data.find('taggers/averaged_perceptron_tagger.zip')
-except LookupError:
-    nltk.download('averaged_perceptron_tagger')
-
-
-# Method to use Regex to replace the first instance of a word with its phonemes
-def replace_first(target, replacement, text):
-    # Skip if target invalid
-    if target is None or target == '':
-        return text
-    # Replace the first instance of a word with its phonemes
-    # return re.sub(r'(?i)\b' + target + r'\b', replacement, text, 1)
-    return re.sub(r'(?<!\{)\b' + target + r'\b(?![\w\s]*[}])', replacement, text, count=1, flags=re.IGNORECASE)
+    from nltk.data import find
+    find('taggers/averaged_perceptron_tagger.zip')
+except LookupError:  # pragma: no cover
+    from nltk.downloader import download
+    download('averaged_perceptron_tagger', raise_on_error=True)
 
 
 class H2p:

@@ -10,18 +10,49 @@
 
 ### Augmented Recurrent Neural G2P with Inflectional Orthography
 
-Grapheme-to-phoneme (G2P) conversion is the process of converting the written form of words (Graphemes) to their 
-pronunciations (Phonemes). Deep learning models for text-to-speech (TTS) synthesis using phoneme / mixed symbols
-typically require a G2P conversion method for both training and inference.
-
-Aquila Resolve presents a new approach for accurate and efficient English G2P resolution. 
-Input text graphemes are translated into their phonetic pronunciations, 
-using [ARPAbet](https://wikipedia.org/wiki/ARPABET) as the [phoneme symbol set](#Symbol-Set).
+Aquila Resolve presents a new approach for accurate and efficient English to 
+[ARPAbet](https://wikipedia.org/wiki/ARPABET) G2P resolution.
 The pipeline employs a context layer, multiple transformer and n-gram morpho-orthographical search layers, 
-and an autoregressive recurrent neural transformer base.
-
-The current implementation offers state-of-the-art accuracy for out-of-vocabulary (OOV) words, as well as contextual
+and an autoregressive recurrent neural transformer base. The current implementation offers state-of-the-art accuracy for out-of-vocabulary (OOV) words, as well as contextual
 analysis for correct inferencing of [English Heteronyms](https://en.wikipedia.org/wiki/Heteronym_(linguistics)).
+
+The package is offered in a pre-trained state that is ready for use as a dependency or in
+notebook environments. There are no additional resources needed, other than the model checkpoint which is
+automatically downloaded on the first usage. See [Installation](#Installation) more information.
+
+### 1. Dynamic Word Mappings based on context:
+
+```pycon
+g2p.convert('I read the book, did you read it?')
+# >> '{AY1} {R EH1 D} {DH AH0} {B UH1 K}, {D IH1 D} {Y UW1} {R IY1 D} {IH1 T}?'
+```
+```pycon
+g2p.convert('The researcher was to subject the subject to a test.')
+# >> '{DH AH0} {R IY1 S ER0 CH ER0} {W AA1 Z} {T UW1} {S AH0 B JH EH1 K T} {DH AH0} {S AH1 B JH IH0 K T} {T UW1} {AH0} {T EH1 S T}.'
+```
+
+|                                                                                                                                                              | 'The subject was told to read. Eight records were read in total.'                                      |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| *Ground Truth*                                                                                                                                               | The `S AH1 B JH IH0 K T` was told to `R IY1 D`. Eight `R EH1 K ER0 D Z` were `R EH1 D` in total.       |
+| Aquila Resolve                                                                                                                                               | The `S AH1 B JH IH0 K T` was told to `R IY1 D`. Eight `R EH1 K ER0 D Z` were `R EH1 D` in total.       |
+| [Deep Phonemizer](https://github.com/as-ideas/DeepPhonemizer)<br/>([en_us_cmudict_forward.pt](https://github.com/as-ideas/DeepPhonemizer#pretrained-models)) | The **S AH B JH EH K T** was told to **R EH D**. Eight **R AH K AO R D Z** were `R EH D` in total.     |
+| [CMUSphinx Seq2Seq](https://github.com/cmusphinx/g2p-seq2seq)<br/>([checkpoint](https://github.com/cmusphinx/g2p-seq2seq#running-g2p))                       | The `S AH1 B JH IH0 K T` was told to `R IY1 D`. Eight **R IH0 K AO1 R D Z** were **R IY1 D** in total. |
+| [ESpeakNG](https://github.com/espeak-ng/espeak-ng) <br/> (with [phonecodes](https://github.com/jhasegaw/phonecodes))                                         | The **S AH1 B JH EH K T** was told to `R IY1 D`. Eight `R EH1 K ER0 D Z` were **R IY1 D** in total.    |
+
+### 2. Leading Accuracy for unseen words:
+
+```pycon
+g2p.convert('Did you kalpe the Hevinet?')
+# >> '{AY1} {R EH1 D} {DH AH0} {B UH1 K}, {D IH1 D} {Y UW1} {R IY1 D} {IH1 T}?'
+```
+ 
+|                                                                                                                                                              | "tensorflow"                | "agglomerative"                    | "necrophages"                    |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|------------------------------------|----------------------------------|
+| Aquila Resolve                                                                                                                                               | `T EH1 N S ER0 F L OW2`     | `AH0 G L AA1 M ER0 EY2 T IH0 V`    | `N EH1 K R OW0 F EY2 JH IH0 Z`   |
+| [Deep Phonemizer](https://github.com/as-ideas/DeepPhonemizer)<br/>([en_us_cmudict_forward.pt](https://github.com/as-ideas/DeepPhonemizer#pretrained-models)) | `T EH N S ER F L OW`        | **AH G L AA M ER AH T IH V**       | `N EH K R OW F EY JH IH Z`       |
+| [CMUSphinx Seq2Seq](https://github.com/cmusphinx/g2p-seq2seq)<br/>([checkpoint](https://github.com/cmusphinx/g2p-seq2seq#running-g2p))                       | **T EH1 N S ER0 L OW0 F**   | **AH0 G L AA1 M ER0 T IH0 V**      | **N AE1 K R AH0 F IH0 JH IH0 Z** |
+| [ESpeakNG](https://github.com/espeak-ng/espeak-ng) <br/> (with [phonecodes](https://github.com/jhasegaw/phonecodes))                                         | **T EH1 N S OW0 R F L OW2** | **AA G L AA1 M ER0 R AH0 T IH2 V** | **N EH1 K R AH0 F IH JH EH0 Z**  |
+
 
 ## Installation
 
@@ -32,8 +63,8 @@ pip install aquila-resolve
 > automatically downloaded on the first use of relevant public methods that require inferencing. For example,
 > when [instantiating `G2p`](#Usage). You can also start this download manually by calling `Aquila_Resolve.download()`.
 > 
-> If you are in an environment where remote file downloads are not possible, you can also download the checkpoint 
-> manually and instantiate `G2p` with the flag: `G2p(custom_checkpoint='path/model.pt')`
+> If you are in an environment where remote file downloads are not possible, you can also transfer the checkpoint 
+> manually, placing `model.pt` within the `Aquila_Resolve.data` module folder.
 
 ## Usage
 
@@ -48,10 +79,10 @@ g2p.convert('The book costs $5, will you read it?')
 
 > Additional optional parameters are available when defining a `G2p` instance:
 
-| Parameter          | Default  | Description                                                                                                                                                                                                             |
-|--------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `device`           | `'cpu'`  | Device for Pytorch inference model                                                                                                                                                                                      |
-| `process_numbers`  | `True`   | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered.                                                |
+| Parameter         | Default | Description                                                                                                                                                              |
+|-------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `device`          | `'cpu'` | Device for Pytorch inference model. GPU is supported using `'cuda'`                                                                                                      |
+| `process_numbers` | `True`  | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered. |
 
 ## Model Architecture
 

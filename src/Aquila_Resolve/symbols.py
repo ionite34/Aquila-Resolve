@@ -98,35 +98,53 @@ def get_parent_pos(pos: str) -> str | None:
         return None
 
 
-def contains_alpha(s: str) -> bool:
-    # Check if a word contains an alpha character
-    return s.upper().isupper()
+def contains_alpha(text: str) -> bool:
+    """
+    Method to check if a string contains alphabetic characters.
+    :param text:
+    :return:
+    """
+    return text.upper().isupper()
 
 
-def is_phoneme(s: str) -> bool:
-    # Check if a word is a phoneme, detect brackets
-    return s.startswith('{') and s.endswith('}')
+def is_braced(word: str) -> bool:
+    """
+    Check if a word is surrounded by brace-markings {}.
+
+    :param word: Word
+    :return: True if word is braced-marked.
+    """
+    return word.startswith('{') and word.endswith('}')
 
 
-def brackets_match(s: str) -> str | None:
-    # Check if string contains brackets at all
-    if not ('{' in s or '}' in s):
-        return None  # Valid
-    index_opened = -1
-    in_bracket = False
-    for i in range(len(s)):
-        if not in_bracket:
-            if s[i] == '{':
-                in_bracket = True
-                index_opened = i
-            elif s[i] == '}':
-                return f'Unexpected close bracket at index {i} without open.'
+def valid_braces(text: str, raise_on_invalid: bool = False) -> bool:
+    """
+    Check if a text is valid braced-marked.
+
+    :param text: Text to check.
+    :param raise_on_invalid: Raises ValueError if invalid.
+    :return: True if text is valid braced-marked.
+    """
+    def invalid(msg: str) -> bool:
+        if raise_on_invalid:
+            raise ValueError(f'Invalid braced-marked text ({msg}) in "{text}"')
         else:
-            if s[i] == '}':
-                in_bracket = False
-            elif s[i] == '{':
-                return f'Unexpected nested open bracket at index {i}.'
-    if in_bracket:
-        return f'Bracket opened at index {index_opened} but was never closed.'
-    return None  # Valid
+            return False
 
+    if not any(c in text for c in {'{', '}'}):
+        return True  # No braces, so valid.
+    in_braces = False
+    for char in text:
+        if char == '{':
+            if not in_braces:
+                in_braces = True
+            else:
+                return invalid('Nested braces')
+        elif char == '}':
+            if in_braces:
+                in_braces = False
+            else:
+                return invalid('Closing brace without opening')
+    if in_braces:
+        return invalid('Opening brace without closing')
+    return True

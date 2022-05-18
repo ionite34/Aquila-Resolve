@@ -22,7 +22,8 @@ _comma_number_re = re.compile(r'([0-9][0-9,]+[0-9])')
 _decimal_number_re = re.compile(r'([0-9]+\.[0-9]+)')
 _currency_re = re.compile(r'([$€£₩])([0-9.,]*[0-9]+)(?:[ ]?({})(?=[^a-zA-Z]|$))?'.format("|".join(_magnitudes)),
                           re.IGNORECASE)
-_measurement_re = re.compile(r'([0-9.,]*[0-9]+(\s)?{}\b)'.format(_measurements), re.IGNORECASE)
+# _measurement_re = re.compile(r'([0-9.,]*[0-9]+(\s)?{}\b)'.format(_measurements), re.IGNORECASE)
+_measurement_re = re.compile(r'(?<!\{)' + r'([\d.,]*\d+(\s)?{}\b)'.format(_measurements) + r'(?![\w\s]*[}])', re.IGNORECASE)
 _ordinal_re = re.compile(r'[0-9]+(st|nd|rd|th)')
 _range_re = re.compile(r'(?<=[0-9])+(-)(?=[0-9])+.*?')
 _roman_re = re.compile(r'\b(?=[MDCLXVI]+\b)M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{2,3})\b')  # avoid I
@@ -92,7 +93,7 @@ def _expand_measurement(m):
     _, number, measurement = re.split(r'(\d+(?:\.\d+)?)', m.group(0))
     number = _inflect.number_to_words(number)
     measurement = "".join(measurement.split())
-    measurement = _measurements_key[measurement.lower()]
+    measurement = _measurements_key.get(measurement.lower(), measurement)
     # if measurement is plural, and number is singular, remove the 's'
     if number == "one" and str.endswith(measurement, "s"):
         # Remove the 's' from the end of the measurement
