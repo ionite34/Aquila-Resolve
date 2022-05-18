@@ -115,3 +115,36 @@ def is_braced(word: str) -> bool:
     :return: True if word is braced-marked.
     """
     return word.startswith('{') and word.endswith('}')
+
+
+def valid_braces(text: str, raise_on_invalid: bool = False) -> bool:
+    """
+    Check if a text is valid braced-marked.
+
+    :param text: Text to check.
+    :param raise_on_invalid: Raises ValueError if invalid.
+    :return: True if text is valid braced-marked.
+    """
+    def invalid(msg: str) -> bool:
+        if raise_on_invalid:
+            raise ValueError(f'Invalid braced-marked text ({msg}) in "{text}"')
+        else:
+            return False
+
+    if not any(c in text for c in {'{', '}'}):
+        return True  # No braces, so valid.
+    in_braces = False
+    for char in text:
+        if char == '{':
+            if not in_braces:
+                in_braces = True
+            else:
+                return invalid('Nested braces')
+        elif char == '}':
+            if in_braces:
+                in_braces = False
+            else:
+                return invalid('Closing brace without opening')
+    if in_braces:
+        return invalid('Opening brace without closing')
+    return True

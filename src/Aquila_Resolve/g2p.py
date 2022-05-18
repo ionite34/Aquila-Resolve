@@ -16,7 +16,7 @@ from .text.numbers import normalize_numbers
 from .filter import filter_text
 from .processors import Processor
 from .infer import Infer
-from .symbols import contains_alpha
+from .symbols import contains_alpha, valid_braces
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
@@ -144,6 +144,7 @@ class G2p:
 
         # Convert numbers, if enabled
         if convert_num:
+            valid_braces(text, raise_on_invalid=True)
             text = normalize_numbers(text)
 
         # Filter and Tokenize
