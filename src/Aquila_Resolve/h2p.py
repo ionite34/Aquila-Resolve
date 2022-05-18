@@ -10,7 +10,7 @@ from . import format_ph as ph
 try:
     from nltk.data import find
     find('taggers/averaged_perceptron_tagger.zip')
-except LookupError:
+except LookupError:  # pragma: no cover
     from nltk.downloader import download
     download('averaged_perceptron_tagger', raise_on_error=True)
 
