@@ -9,15 +9,14 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem.snowball import SnowballStemmer
 
 from .h2p import H2p
-from .h2p import replace_first
+from .text.replace import replace_first
 from .format_ph import with_cb
-# from .dict_reader import DictReader
 from .static_dict import get_cmudict
 from .text.numbers import normalize_numbers
 from .filter import filter_text
 from .processors import Processor
 from .infer import Infer
-from .symbols import contains_alpha, brackets_match
+from .symbols import contains_alpha
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
@@ -143,12 +142,7 @@ class G2p:
         :param convert_num: True to convert numbers to words
         """
 
-        # Check that every {} bracket is paired
-        check = brackets_match(text)
-        if check is not None:
-            raise ValueError(check)
-
-        # Normalize numbers, if enabled
+        # Convert numbers, if enabled
         if convert_num:
             text = normalize_numbers(text)
 
