@@ -33,10 +33,10 @@ except LookupError:
 
 class G2p:
     def __init__(self, device: str = 'cpu'):
-        # noinspection GrazieInspection
         """
-        Grapheme to Phoneme conversion
+        Initialize the G2p converter.
 
+        :param device: Pytorch device.
         """
         self.dict = get_cmudict()  # CMU Dictionary
         self.h2p = H2p(preload=True)  # H2p parser
