@@ -65,7 +65,6 @@ class G2p:
 
     @lru_cache(maxsize=None)
     def lookup(self, text: str, pos: str = None) -> str | None:
-        # noinspection GrazieInspection
         """
         Gets the CMU Dictionary entry for a word.
 
@@ -134,7 +133,6 @@ class G2p:
         return None
 
     def convert(self, text: str, convert_num: bool = True) -> str | None:
-        # noinspection GrazieInspection
         """
         Replace a grapheme text line with phonemes.
 
