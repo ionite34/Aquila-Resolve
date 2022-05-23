@@ -132,6 +132,7 @@ class G2p:
 
         return None
 
+    @lru_cache(maxsize=None)
     def convert(self, text: str, convert_num: bool = True) -> str | None:
         """
         Replace a grapheme text line with phonemes.
@@ -176,9 +177,8 @@ class G2p:
             # Normal inference / cmu
             else:
                 phonemes = self.lookup(word, pos)
-            # Format phonemes
-            f_ph = with_cb(phonemes)
             # Replace word with phonemes
-            text = replace_first(word, f_ph, text)
+            if phonemes:
+                text = replace_first(word, with_cb(phonemes), text)
         # Return text
         return text
