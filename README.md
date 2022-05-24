@@ -16,7 +16,7 @@ The pipeline employs a context layer, multiple transformer and n-gram morpho-ort
 and an autoregressive recurrent neural transformer base. The current implementation offers state-of-the-art accuracy for out-of-vocabulary (OOV) words, as well as contextual
 analysis for correct inferencing of [English Heteronyms](https://en.wikipedia.org/wiki/Heteronym_(linguistics)).
 
-The package is offered in a pre-trained state that is ready for use as a dependency or in
+The package is offered in a pre-trained state that is ready for [usage](#Usage) as a dependency or in
 notebook environments. There are no additional resources needed, other than the model checkpoint which is
 automatically downloaded on the first usage. See [Installation](#Installation) more information.
 
@@ -68,6 +68,8 @@ pip install aquila-resolve
 
 ## Usage
 
+### 1. Module
+
 ```python
 from Aquila_Resolve import G2p
 
@@ -77,12 +79,28 @@ g2p.convert('The book costs $5, will you read it?')
 # >> '{DH AH0} {B UH1 K} {K AA1 S T S} {F AY1 V} {D AA1 L ER0 Z}, {W IH1 L} {Y UW1} {R IY1 D} {IH1 T}?'
 ```
 
-> Additional optional parameters are available when defining a `G2p` instance:
+> Optional parameters when defining a `G2p` instance:
 
 | Parameter         | Default | Description                                                                                                                                                              |
 |-------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `device`          | `'cpu'` | Device for Pytorch inference model. GPU is supported using `'cuda'`                                                                                                      |
+
+> Optional parameters when calling `convert`:
+
+| Parameter         | Default | Description                                                                                                                                                              |
+|-------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `process_numbers` | `True`  | Toggles conversion of some numbers and symbols to their spoken pronunciation forms. See [numbers.py](src/Aquila_Resolve/text/numbers.py) for details on what is covered. |
+
+### 2. Command Line
+
+A simple wrapper for text conversion is available through the `aquila-resolve` command
+```
+~
+❯ aquila-resolve
+✔ Aquila Resolve v0.1.2
+? Text to convert: I read the book, did you read it?
+{AY1} {R EH1 D} {DH AH0} {B UH1 K}, {D IH1 D} {Y UW1} {R IY1 D} {IH1 T}?
+```
 
 ## Model Architecture
 
