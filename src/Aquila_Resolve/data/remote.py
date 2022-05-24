@@ -1,6 +1,7 @@
 # Access and checks for remote data
 import requests
 import shutil
+import nltk
 from warnings import warn
 from tqdm.auto import tqdm
 from . import DATA_PATH
@@ -54,6 +55,19 @@ def ensure_download() -> None:
                            "Aquila_Resolve/data/ folder.")
 
 
+def ensure_nltk() -> None:  # pragma: no cover
+    """Ensures all required NLTK Data is installed"""
+    required = {
+        'wordnet': 'corpora/wordnet.zip',
+        'omw-1.4': 'corpora/omw-1.4.zip',
+    }
+    for name, url in required.items():
+        try:
+            nltk.data.find(url)
+        except LookupError:
+            nltk.download(name, raise_on_error=True)
+
+
 def check_updates() -> None:
     """Checks if the model matches the latest checksum"""
     if not check_model():
@@ -62,7 +76,13 @@ def check_updates() -> None:
 
 
 def get_checksum(file: str, block_size: int = 65536) -> str:
-    """Calculates the checksum of a file"""
+    """
+    Calculates the Sha256 checksum of a file
+
+    :param file: Path to file
+    :param block_size: Block size for reading
+    :return: Checksum of file
+    """
     import hashlib
     s = hashlib.sha256()
     with open(file, 'rb') as f:
