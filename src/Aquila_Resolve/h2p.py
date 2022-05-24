@@ -87,9 +87,9 @@ class H2p:
         # Get pos tags list
         tags_list = pos_tag_sents(list_sentence_words)
         # Loop through lines
-        for index in range(len(tags_list)):
+        for index, line in enumerate(tags_list):
             # Loop through words and pos tags in tags_list index
-            for word, pos in tags_list[index]:
+            for word, pos in line:
                 # Skip if word not in dictionary
                 if not self.dict.contains(word):
                     continue
