@@ -7,5 +7,7 @@ torch~=1.11.0
 inflect>=2.1.0
 requests>=2.23.0
 numpy>=1.18.0
+inquirerpy>=0.3.3
+yaspin>=2.1.0
 pytest>=7.1.2
 pytest_mock>=3.7.0

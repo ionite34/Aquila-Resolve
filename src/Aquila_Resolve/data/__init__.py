@@ -9,3 +9,6 @@ else:
 
 
 DATA_PATH = files(__name__)
+CMU_FILE = DATA_PATH.joinpath("cmudict.json.gz")
+HET_FILE = DATA_PATH.joinpath("heteronyms.json")
+PT_FILE = DATA_PATH.joinpath("model.pt")

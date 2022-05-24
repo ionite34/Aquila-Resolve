@@ -1,6 +1,7 @@
 # Transformations of text sequences for matching
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from collections import defaultdict
 
 import re
 
@@ -18,25 +19,9 @@ class Processor:
         self._tag = g2p.h2p.tag
         self._stem = g2p.stem
         # Number of times respective methods were called
-        self.stat_hits = {
-            'possessives': 0,
-            'contractions': 0,
-            'hyphenated': 0,
-            'compound': 0,
-            'plural': 0,
-            'stem': 0,
-            'inference': 0
-        }
+        self.stat_hits = defaultdict(int)
         # Number of times respective methods returned value (not None)
-        self.stat_resolves = {
-            'possessives': 0,
-            'contractions': 0,
-            'hyphenated': 0,
-            'compound': 0,
-            'plural': 0,
-            'stem': 0,
-            'inference': 0
-        }
+        self.stat_resolves = defaultdict(int)
 
     def auto_possessives(self, word: str) -> str | None:
         """

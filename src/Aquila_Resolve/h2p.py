@@ -1,18 +1,11 @@
 from nltk.tokenize import TweetTokenizer
 from nltk import pos_tag
 from nltk import pos_tag_sents
+from .data.remote import ensure_nltk
 from .dictionary import Dictionary
 from .filter import filter_text as ft
 from .text.replace import replace_first
 from . import format_ph as ph
-
-# Check required nltk data exists, if not, download it
-try:
-    from nltk.data import find
-    find('taggers/averaged_perceptron_tagger.zip')
-except LookupError:  # pragma: no cover
-    from nltk.downloader import download
-    download('averaged_perceptron_tagger', raise_on_error=True)
 
 
 class H2p:
@@ -29,6 +22,8 @@ class H2p:
         :param preload: Preloads the tokenizer and tagger during initialization
         :type preload: bool
         """
+        # Ensure nltk data is available
+        ensure_nltk()
 
         # Supported phoneme formats
         self.phoneme_format = phoneme_format
@@ -87,9 +82,9 @@ class H2p:
         # Get pos tags list
         tags_list = pos_tag_sents(list_sentence_words)
         # Loop through lines
-        for index in range(len(tags_list)):
+        for index, line in enumerate(tags_list):
             # Loop through words and pos tags in tags_list index
-            for word, pos in tags_list[index]:
+            for word, pos in line:
                 # Skip if word not in dictionary
                 if not self.dict.contains(word):
                     continue

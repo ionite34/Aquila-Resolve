@@ -4,7 +4,6 @@ import re
 from functools import lru_cache
 
 import pywordsegment
-import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.snowball import SnowballStemmer
 
@@ -17,27 +16,21 @@ from .filter import filter_text
 from .processors import Processor
 from .infer import Infer
 from .symbols import contains_alpha, valid_braces
+from .data.remote import ensure_nltk
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
 re_phonemes = re.compile(r'\{.*?}')
 
-# Check that the nltk data is downloaded, if not, download it
-try:
-    nltk.data.find('corpora/wordnet.zip')
-    nltk.data.find('corpora/omw-1.4.zip')
-except LookupError:
-    nltk.download('wordnet')
-    nltk.download('omw-1.4')
-
 
 class G2p:
     def __init__(self, device: str = 'cpu'):
-        # noinspection GrazieInspection
         """
-        Grapheme to Phoneme conversion
+        Initialize the G2p converter.
 
+        :param device: Pytorch device.
         """
+        ensure_nltk()  # Ensure nltk data is downloaded
         self.dict = get_cmudict()  # CMU Dictionary
         self.h2p = H2p(preload=True)  # H2p parser
         self.lemmatize = WordNetLemmatizer().lemmatize  # WordNet Lemmatizer - used to find singular form
@@ -65,7 +58,6 @@ class G2p:
 
     @lru_cache(maxsize=None)
     def lookup(self, text: str, pos: str = None) -> str | None:
-        # noinspection GrazieInspection
         """
         Gets the CMU Dictionary entry for a word.
 
@@ -134,7 +126,6 @@ class G2p:
         return None
 
     def convert(self, text: str, convert_num: bool = True) -> str | None:
-        # noinspection GrazieInspection
         """
         Replace a grapheme text line with phonemes.
 
