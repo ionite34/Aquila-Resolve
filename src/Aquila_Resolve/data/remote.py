@@ -60,6 +60,7 @@ def ensure_nltk() -> None:  # pragma: no cover
     required = {
         'wordnet': 'corpora/wordnet.zip',
         'omw-1.4': 'corpora/omw-1.4.zip',
+        'averaged_perceptron_tagger': 'taggers/averaged_perceptron_tagger.zip',
     }
     for name, url in required.items():
         try:
