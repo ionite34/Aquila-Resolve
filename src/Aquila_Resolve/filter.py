@@ -19,13 +19,13 @@ def filter_text(text: str, allow_num: bool = False, preserve_case: bool = False)
     :return: Text after stripped accents, lower-cased, and invalid punctuation removed
     """
     # Strip accents
-    text = normalize('NFD', text)
+    text = normalize("NFD", text)
     # To lowercase
     if not preserve_case:
         text = text.lower()
     # Remove all invalid punctuation
     if allow_num:
-        text = re.sub(re_filter_with_num, '', text)
+        text = re.sub(re_filter_with_num, "", text)
     else:
         text = re.sub(re_filter, "", text)
     # Remove all spaces more than 1

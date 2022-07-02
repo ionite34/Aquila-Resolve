@@ -20,11 +20,11 @@ from .data.remote import ensure_nltk
 
 re_digit = re.compile(r"\((\d+)\)")
 re_bracket_with_digit = re.compile(r"\(.*\)")
-re_phonemes = re.compile(r'\{.*?}')
+re_phonemes = re.compile(r"\{.*?}")
 
 
 class G2p:
-    def __init__(self, device: str = 'cpu'):
+    def __init__(self, device: str = "cpu"):
         """
         Initialize the G2p converter.
 
@@ -33,8 +33,10 @@ class G2p:
         ensure_nltk()  # Ensure nltk data is downloaded
         self.dict = get_cmudict()  # CMU Dictionary
         self.h2p = H2p(preload=True)  # H2p parser
-        self.lemmatize = WordNetLemmatizer().lemmatize  # WordNet Lemmatizer - used to find singular form
-        self.stem = SnowballStemmer('english').stem  # Snowball Stemmer - used to find stem root of words
+        # WordNet Lemmatizer - used to find singular form
+        self.lemmatize = WordNetLemmatizer().lemmatize
+        # Snowball Stemmer - used to find stem root of words
+        self.stem = SnowballStemmer("english").stem
         self.segment = pywordsegment.WordSegmenter().segment  # Word Segmenter
         self.p = Processor(self)  # Processor for processing text
         self.infer = Infer(device=device)
@@ -149,17 +151,17 @@ class G2p:
         for word, pos in tags:
             # Check valid
             if in_bracket:
-                if word == '}':
+                if word == "}":
                     in_bracket = False
                     continue
-                elif word == '{':
-                    raise ValueError('Unmatched bracket')
+                elif word == "{":
+                    raise ValueError("Unmatched bracket")
             if not in_bracket:
-                if word == '{':
+                if word == "{":
                     in_bracket = True
                     continue
-                elif word == '}':
-                    raise ValueError('Unmatched bracket')
+                elif word == "}":
+                    raise ValueError("Unmatched bracket")
             if not contains_alpha(word):
                 continue
 

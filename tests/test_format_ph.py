@@ -6,14 +6,14 @@ data_sds = [
     "P ER0 S EH1 N T",
     "AO1",
     "P AA1 R K",
-    "K AA1 N S OW0 L"
+    "K AA1 N S OW0 L",
 ]
 data_list = [
-    ['HH', 'AE1', 'M', 'AA2', 'R', 'K'],
-    ['P', 'ER0', 'S', 'EH1', 'N', 'T'],
-    ['AO1'],
-    ['P', 'AA1', 'R', 'K'],
-    ['K', 'AA1', 'N', 'S', 'OW0', 'L']
+    ["HH", "AE1", "M", "AA2", "R", "K"],
+    ["P", "ER0", "S", "EH1", "N", "T"],
+    ["AO1"],
+    ["P", "AA1", "R", "K"],
+    ["K", "AA1", "N", "S", "OW0", "L"],
 ]
 data_invalid = [
     (1, TypeError),
@@ -26,7 +26,7 @@ data_invalid = [
     ([None], None),
     ([[None], [None]], None),
     ([], None),
-    ([[]], None)
+    ([[]], None),
 ]
 
 

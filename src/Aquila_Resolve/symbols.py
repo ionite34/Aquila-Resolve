@@ -44,26 +44,166 @@ from __future__ import annotations
 
 # noinspection SpellCheckingInspection,GrazieInspection
 graphemes = list("abcdefghijklmnopqrstuvwxyz")
-phonemes = ['AA0', 'AA1', 'AA2', 'AE0', 'AE1', 'AE2', 'AH0', 'AH1', 'AH2', 'AO0',
-            'AO1', 'AO2', 'AW0', 'AW1', 'AW2', 'AY0', 'AY1', 'AY2', 'B', 'CH', 'D', 'DH',
-            'EH0', 'EH1', 'EH2', 'ER0', 'ER1', 'ER2', 'EY0', 'EY1', 'EY2', 'F', 'G', 'HH',
-            'IH0', 'IH1', 'IH2', 'IY0', 'IY1', 'IY2', 'JH', 'K', 'L', 'M', 'N', 'NG',
-            'OW0', 'OW1', 'OW2', 'OY0', 'OY1', 'OY2', 'P', 'R', 'S', 'SH', 'T', 'TH',
-            'UH0', 'UH1', 'UH2', 'UW', 'UW0', 'UW1', 'UW2', 'V', 'W', 'Y', 'Z', 'ZH']
-pos_tags = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS',
-            'NNP', 'NNPS', 'PDT', 'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'TO', 'UH',
-            'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WP$', 'WRB']
-pos_type_tags = ['VERB', 'NOUN', 'PRON', 'ADJ', 'ADV']
-pos_type_short_tags = ['V', 'N', 'P', 'A', 'R']
-pos_type_form_dict = {'V': 'VERB', 'N': 'NOUN', 'P': 'PRON', 'A': 'ADJ', 'R': 'ADV'}
+phonemes = [
+    "AA0",
+    "AA1",
+    "AA2",
+    "AE0",
+    "AE1",
+    "AE2",
+    "AH0",
+    "AH1",
+    "AH2",
+    "AO0",
+    "AO1",
+    "AO2",
+    "AW0",
+    "AW1",
+    "AW2",
+    "AY0",
+    "AY1",
+    "AY2",
+    "B",
+    "CH",
+    "D",
+    "DH",
+    "EH0",
+    "EH1",
+    "EH2",
+    "ER0",
+    "ER1",
+    "ER2",
+    "EY0",
+    "EY1",
+    "EY2",
+    "F",
+    "G",
+    "HH",
+    "IH0",
+    "IH1",
+    "IH2",
+    "IY0",
+    "IY1",
+    "IY2",
+    "JH",
+    "K",
+    "L",
+    "M",
+    "N",
+    "NG",
+    "OW0",
+    "OW1",
+    "OW2",
+    "OY0",
+    "OY1",
+    "OY2",
+    "P",
+    "R",
+    "S",
+    "SH",
+    "T",
+    "TH",
+    "UH0",
+    "UH1",
+    "UH2",
+    "UW",
+    "UW0",
+    "UW1",
+    "UW2",
+    "V",
+    "W",
+    "Y",
+    "Z",
+    "ZH",
+]
+pos_tags = [
+    "CC",
+    "CD",
+    "DT",
+    "EX",
+    "FW",
+    "IN",
+    "JJ",
+    "JJR",
+    "JJS",
+    "LS",
+    "MD",
+    "NN",
+    "NNS",
+    "NNP",
+    "NNPS",
+    "PDT",
+    "POS",
+    "PRP",
+    "PRP$",
+    "RB",
+    "RBR",
+    "RBS",
+    "RP",
+    "TO",
+    "UH",
+    "VB",
+    "VBD",
+    "VBG",
+    "VBN",
+    "VBP",
+    "VBZ",
+    "WDT",
+    "WP",
+    "WP$",
+    "WRB",
+]
+pos_type_tags = ["VERB", "NOUN", "PRON", "ADJ", "ADV"]
+pos_type_short_tags = ["V", "N", "P", "A", "R"]
+pos_type_form_dict = {"V": "VERB", "N": "NOUN", "P": "PRON", "A": "ADJ", "R": "ADV"}
 graphemes_set = set(graphemes)
 phonemes_set = set(phonemes)
 pos_tags_set = set(pos_tags)
 pos_type_tags_set = set(pos_type_tags)
 pos_type_short_tags_set = set(pos_type_short_tags)
-punctuation = {'.', ',', ':', ';', '?', '!', '-', '_', '\'', '\"', '`', '~', '@', '#', '$'}
-consonants = {'B', 'CH', 'D', 'DH', 'F', 'G', 'HH', 'JH', 'K', 'L', 'M', 'N', 'NG', 'P', 'R',
-              'S', 'SH', 'T', 'TH', 'V', 'W', 'Y', 'Z', 'ZH'}
+punctuation = {
+    ".",
+    ",",
+    ":",
+    ";",
+    "?",
+    "!",
+    "-",
+    "_",
+    "'",
+    '"',
+    "`",
+    "~",
+    "@",
+    "#",
+    "$",
+}
+consonants = {
+    "B",
+    "CH",
+    "D",
+    "DH",
+    "F",
+    "G",
+    "HH",
+    "JH",
+    "K",
+    "L",
+    "M",
+    "N",
+    "NG",
+    "P",
+    "R",
+    "S",
+    "SH",
+    "T",
+    "TH",
+    "V",
+    "W",
+    "Y",
+    "Z",
+    "ZH",
+}
 
 
 def to_full_type_tag(short_type_tag: str) -> str | None:
@@ -72,28 +212,28 @@ def to_full_type_tag(short_type_tag: str) -> str | None:
     :param short_type_tag: Short type tag
     :return: Full type tag, or None if not found
     """
-    if short_type_tag == 'V':
-        return 'VERB'
-    elif short_type_tag == 'N':
-        return 'NOUN'
-    elif short_type_tag == 'P':
-        return 'PRON'
-    elif short_type_tag == 'A':
-        return 'ADJ'
-    elif short_type_tag == 'R':
-        return 'ADV'
+    if short_type_tag == "V":
+        return "VERB"
+    elif short_type_tag == "N":
+        return "NOUN"
+    elif short_type_tag == "P":
+        return "PRON"
+    elif short_type_tag == "A":
+        return "ADJ"
+    elif short_type_tag == "R":
+        return "ADV"
     else:
         return None
 
 
 def get_parent_pos(pos: str) -> str | None:
-    """ Get parent POS tag of a POS tag. """
-    if pos.startswith('VB'):
-        return 'VERB'
-    elif pos.startswith('NN'):
-        return 'NOUN'
-    elif pos.startswith('RB'):
-        return 'ADVERB'
+    """Get parent POS tag of a POS tag."""
+    if pos.startswith("VB"):
+        return "VERB"
+    elif pos.startswith("NN"):
+        return "NOUN"
+    elif pos.startswith("RB"):
+        return "ADVERB"
     else:
         return None
 
@@ -114,7 +254,7 @@ def is_braced(word: str) -> bool:
     :param word: Word
     :return: True if word is braced-marked.
     """
-    return word.startswith('{') and word.endswith('}')
+    return word.startswith("{") and word.endswith("}")
 
 
 def valid_braces(text: str, raise_on_invalid: bool = False) -> bool:
@@ -125,26 +265,27 @@ def valid_braces(text: str, raise_on_invalid: bool = False) -> bool:
     :param raise_on_invalid: Raises ValueError if invalid.
     :return: True if text is valid braced-marked.
     """
+
     def invalid(msg: str) -> bool:
         if raise_on_invalid:
             raise ValueError(f'Invalid braced-marked text ({msg}) in "{text}"')
         else:
             return False
 
-    if not any(c in text for c in {'{', '}'}):
+    if not any(c in text for c in {"{", "}"}):
         return True  # No braces, so valid.
     in_braces = False
     for char in text:
-        if char == '{':
+        if char == "{":
             if not in_braces:
                 in_braces = True
             else:
-                return invalid('Nested braces')
-        elif char == '}':
+                return invalid("Nested braces")
+        elif char == "}":
             if in_braces:
                 in_braces = False
             else:
-                return invalid('Closing brace without opening')
+                return invalid("Closing brace without opening")
     if in_braces:
-        return invalid('Opening brace without closing')
+        return invalid("Opening brace without closing")
     return True

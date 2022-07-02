@@ -9,7 +9,7 @@ from . import format_ph as ph
 
 
 class H2p:
-    def __init__(self, dict_path=None, preload=False, phoneme_format=''):
+    def __init__(self, dict_path=None, preload=False, phoneme_format=""):
         """
         Creates a H2p parser
 
@@ -35,9 +35,9 @@ class H2p:
 
     # Method to preload tokenizer and pos_tag
     def preload(self):
-        tokens = self.tokenize('a')
-        assert tokens == ['a']
-        assert pos_tag(tokens)[0][0] == 'a'
+        tokens = self.tokenize("a")
+        assert tokens == ["a"]
+        assert pos_tag(tokens)[0][0] == "a"
 
     # Method to check if a text line contains a heteronym
     def contains_het(self, text):
@@ -106,4 +106,3 @@ class H2p:
         tags = pos_tag(words)
         # Only return element 1 of each list
         return [tag[1] for tag in tags]
-

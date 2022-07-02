@@ -8,7 +8,7 @@ import re
 if TYPE_CHECKING:
     from .g2p import G2p
 
-_re_digit = re.compile(r'\d+')
+_re_digit = re.compile(r"\d+")
 
 
 class Processor:
@@ -32,7 +32,7 @@ class Processor:
         if not word.endswith("'s"):
             return None
         # If the word ends with "'s", register a hit
-        self.stat_hits['possessives'] += 1
+        self.stat_hits["possessives"] += 1
         """
         There are 3 general cases:
         1. Base words ending in one of 6 special consonants (sibilants)
@@ -53,17 +53,17 @@ class Processor:
 
         # Method to return phoneme and increment stat
         def _resolve(phoneme: str) -> str:
-            self.stat_resolves['possessives'] += 1
+            self.stat_resolves["possessives"] += 1
             return phoneme
 
         core = word[:-2]  # Get core word without possessive
         ph = self._lookup(core)  # find core word using recursive search
         if ph is None:
             return None  # Core word not found
-        ph_list = ph.split(' ')  # Split phonemes into list
+        ph_list = ph.split(" ")  # Split phonemes into list
         # [Case 1]
-        if ph_list[-1] in {'S', 'Z', 'CH', 'JH', 'SH', 'ZH'}:
-            ph += ' IH0 Z'
+        if ph_list[-1] in {"S", "Z", "CH", "JH", "SH", "ZH"}:
+            ph += " IH0 Z"
             return _resolve(ph)
         # [Case 2]
         """
@@ -74,12 +74,15 @@ class Processor:
         To simplify matching, we will check for the listed single-letter variants and 'NG'
         and then check for any numbered variant
         """
-        if ph_list[-1] in {'B', 'D', 'G', 'M', 'N', 'R', 'L', 'NG'} or ph_list[-1][-1].isdigit():
-            ph += ' Z'
+        if (
+            ph_list[-1] in {"B", "D", "G", "M", "N", "R", "L", "NG"}
+            or ph_list[-1][-1].isdigit()
+        ):
+            ph += " Z"
             return _resolve(ph)
         # [Case 3]
-        if ph_list[-1] in ['P', 'T', 'K', 'TH']:
-            ph += ' S'
+        if ph_list[-1] in ["P", "T", "K", "TH"]:
+            ph += " S"
             return _resolve(ph)
 
         return None  # No match found
@@ -96,11 +99,11 @@ class Processor:
         - 'd
         """
         # First, check if the word is a contraction
-        parts = word.split("\'")  # Split on [']
-        if len(parts) != 2 or parts[1] not in {'ll', 'd'}:
+        parts = word.split("'")  # Split on [']
+        if len(parts) != 2 or parts[1] not in {"ll", "d"}:
             return None  # No contraction found
         # If initial check passes, register a hit
-        self.stat_hits['contractions'] += 1
+        self.stat_hits["contractions"] += 1
 
         # Get the core word
         core = parts[0]
@@ -109,12 +112,12 @@ class Processor:
         if ph is None:
             return None  # Core word not found
         # Add the phoneme with the appropriate suffix
-        if parts[1] == 'll':
-            ph += ' AH0 L'
-        elif parts[1] == 'd':
-            ph += ' D'
+        if parts[1] == "ll":
+            ph += " AH0 L"
+        elif parts[1] == "d":
+            ph += " D"
         # Return the phoneme
-        self.stat_resolves['contractions'] += 1
+        self.stat_resolves["contractions"] += 1
         return ph
 
     def auto_hyphenated(self, word: str) -> str | None:
@@ -124,12 +127,12 @@ class Processor:
         :return:
         """
         # First, check if the word is a hyphenated word
-        if '-' not in word:
+        if "-" not in word:
             return None  # No hyphen found
         # If initial check passes, register a hit
-        self.stat_hits['hyphenated'] += 1
+        self.stat_hits["hyphenated"] += 1
         # Split the word into parts
-        parts = word.split('-')
+        parts = word.split("-")
         # Get the phonemes for each part
         ph = []
         for part in parts:
@@ -138,8 +141,8 @@ class Processor:
                 return None  # Part not found
             ph.append(ph_part)
         # Return the phoneme
-        self.stat_resolves['hyphenated'] += 1
-        return ' '.join(ph)
+        self.stat_resolves["hyphenated"] += 1
+        return " ".join(ph)
 
     def auto_compound(self, word: str) -> str | None:
         """
@@ -156,7 +159,7 @@ class Processor:
             if len(part) < 3:
                 return None
         # If initial check passes, register a hit
-        self.stat_hits['compound'] += 1
+        self.stat_hits["compound"] += 1
         # Get the phonemes for each part
         ph = []
         for part in parts:
@@ -165,9 +168,9 @@ class Processor:
                 return None  # Part not found
             ph.append(ph_part)
         # Join the phonemes
-        ph = ' '.join(ph)
+        ph = " ".join(ph)
         # Return the phoneme
-        self.stat_resolves['compound'] += 1
+        self.stat_resolves["compound"] += 1
         return ph
 
     def auto_plural(self, word: str, pos: str = None) -> str | None:
@@ -182,27 +185,27 @@ class Processor:
         """
         # First, check if the word is a replaceable plural
         # Needs to end in 's' or 'es'
-        if word[-1] != 's':
+        if word[-1] != "s":
             return None  # No plural found
         # Now check if the word is a plural using pos
         if pos is None:
             pos = self._tag(word)
-        if pos is None or len(pos) == 0 or (pos[0] != 'NNS' and pos[0] != 'NNPS'):
+        if pos is None or len(pos) == 0 or (pos[0] != "NNS" and pos[0] != "NNPS"):
             return None  # No tag found
         # If initial check passes, register a hit
-        self.stat_hits['plural'] += 1
+        self.stat_hits["plural"] += 1
 
         """
         Case 1:
         > Word ends in 'oes'
         > Remove the 'es' to get the singular
         """
-        if len(word) > 3 and word[-3:] == 'oes':
+        if len(word) > 3 and word[-3:] == "oes":
             singular = word[:-2]
             # Look up the possessive form (since the pronunciation is the same)
             ph = self.auto_possessives(singular + "'s")
             if ph is not None:
-                self.stat_resolves['plural'] += 1
+                self.stat_resolves["plural"] += 1
                 return ph  # Return the phoneme
 
         """
@@ -210,12 +213,12 @@ class Processor:
         > Word ends in 's'
         > Remove the 's' to get the singular
         """
-        if len(word) > 1 and word[-1] == 's':
+        if len(word) > 1 and word[-1] == "s":
             singular = word[:-1]
             # Look up the possessive form (since the pronunciation is the same)
             ph = self.auto_possessives(singular + "'s")
             if ph is not None:
-                self.stat_resolves['plural'] += 1
+                self.stat_resolves["plural"] += 1
                 return ph  # Return the phoneme
 
         # If no matches, return None
@@ -252,46 +255,46 @@ class Processor:
                 - 2nd attempt: with the repeated consonant (runn, stopp)
         """
         # Discontinue if word is too short
-        if len(word) < 3 or (not word.endswith('ly') and not word.endswith('ing')):
+        if len(word) < 3 or (not word.endswith("ly") and not word.endswith("ing")):
             return None
         # Register a hit
-        self.stat_hits['stem'] += 1  # Register hit
+        self.stat_hits["stem"] += 1  # Register hit
 
         # For ly case
-        if word.endswith('ly'):
+        if word.endswith("ly"):
             # Get the root word
             root = word[:-2]
             # Recursively get the root
             ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
-                ph_ly = 'L IY0'
-                ph_joined = ' '.join([ph_root, ph_ly])
-                self.stat_resolves['stem'] += 1
+                ph_ly = "L IY0"
+                ph_joined = " ".join([ph_root, ph_ly])
+                self.stat_resolves["stem"] += 1
                 return ph_joined
 
         # For ing case 1
-        if word.endswith('ing'):
+        if word.endswith("ing"):
             # Get the root word
             root = word[:-3]
             # Recursively get the root
             ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
-                ph_ly = 'IH0 NG'
-                ph_joined = ' '.join([ph_root, ph_ly])
-                self.stat_resolves['stem'] += 1
+                ph_ly = "IH0 NG"
+                ph_joined = " ".join([ph_root, ph_ly])
+                self.stat_resolves["stem"] += 1
                 return ph_joined
 
         # For ing case 2
-        if word.endswith('ing'):
+        if word.endswith("ing"):
             # Get the root word, add [e]
-            root = word[:-3] + 'e'
+            root = word[:-3] + "e"
             # Recursively get the root
             ph_root = self._lookup(root)
             # Output if exists
             if ph_root is not None:
-                ph_ly = 'IH0 NG'
-                ph_joined = ' '.join([ph_root, ph_ly])
-                self.stat_resolves['stem'] += 1
+                ph_ly = "IH0 NG"
+                ph_joined = " ".join([ph_root, ph_ly])
+                self.stat_resolves["stem"] += 1
                 return ph_joined
