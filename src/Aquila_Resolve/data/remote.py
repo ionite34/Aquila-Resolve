@@ -43,9 +43,8 @@ def download(update: bool = True) -> bool:
         total_size = int(r.headers.get("content-length", 0))
         with tqdm.wrapattr(
             r.raw, "read", total=total_size, desc="Downloading model checkpoint"
-        ) as raw:
-            with _model.open("wb") as f:
-                shutil.copyfileobj(raw, f)
+        ) as raw, _model.open("wb") as f:
+            shutil.copyfileobj(raw, f)
     if update:
         return _model.exists() and check_model()  # Update flag, verify checksum also
     return _model.exists()  # For no update flag, just check existence
