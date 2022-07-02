@@ -50,9 +50,9 @@ def always_exists(path):
 def h2p(mocker) -> H2p:
     # Patch builtins.open
     mocked_dict_data = mock.mock_open(read_data=file_mock_content)
-    with mock.patch('builtins.open', mocked_dict_data):
+    with mock.patch("builtins.open", mocked_dict_data):
         # Patch Dictionary exist check
-        mocker.patch.object(dictionary, 'exists', side_effect=always_exists)
+        mocker.patch.object(dictionary, "exists", side_effect=always_exists)
         # Create H2p object
         result = H2p(file_mock_path)
     assert isinstance(result, H2p)
@@ -65,9 +65,9 @@ def h2p(mocker) -> H2p:
 def mock_dict(mocker) -> dictionary.Dictionary:
     # Patch builtins.open
     mocked_dict_data = mock.mock_open(read_data=file_mock_content)
-    with mock.patch('builtins.open', mocked_dict_data):
+    with mock.patch("builtins.open", mocked_dict_data):
         # Patch Dictionary exist check
-        mocker.patch.object(dictionary, 'exists', side_effect=always_exists)
+        mocker.patch.object(dictionary, "exists", side_effect=always_exists)
         # Create Dictionary object
         result = dictionary.Dictionary(file_mock_path)
     assert isinstance(result, dictionary.Dictionary)
@@ -79,7 +79,7 @@ def mock_dict(mocker) -> dictionary.Dictionary:
 # Creates a Dictionary object using default path
 def mock_dict_def(mocker) -> dictionary.Dictionary:
     # Patch Dictionary exist check
-    mocker.patch.object(dictionary, 'exists', side_effect=always_exists)
+    mocker.patch.object(dictionary, "exists", side_effect=always_exists)
     # Create Dictionary object
     result = dictionary.Dictionary()
     assert isinstance(result, dictionary.Dictionary)

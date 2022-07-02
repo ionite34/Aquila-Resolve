@@ -4,11 +4,13 @@ from typing import overload
 
 
 @overload
-def to_sds(ph: str) -> str: ...
+def to_sds(ph: str) -> str:
+    ...
 
 
 @overload
-def to_sds(ph: list) -> str: ...
+def to_sds(ph: list) -> str:
+    ...
 
 
 def to_sds(ph: list or str) -> str or None:
@@ -24,7 +26,7 @@ def to_sds(ph: list or str) -> str or None:
 
     # Return directly if str, with curly brackets removed
     if isinstance(ph, str):
-        return ph.replace('{', '').replace('}', '')
+        return ph.replace("{", "").replace("}", "")
 
     # If is list, convert each element
     if isinstance(ph, list):
@@ -39,22 +41,24 @@ def to_sds(ph: list or str) -> str or None:
             return ph[0]
         # Case if str at index 0, above size 1, return with join
         elif isinstance(ph[0], str):
-            return ' '.join(ph)
+            return " ".join(ph)
         # Case for none
         elif ph[0] is None:
             return None
         else:
-            raise TypeError('to_sds() encountered an unexpected nested element type')
+            raise TypeError("to_sds() encountered an unexpected nested element type")
     # Error if no matches
-    raise TypeError('to_sds() expects a list or string')
+    raise TypeError("to_sds() expects a list or string")
 
 
 @overload
-def to_list(ph: str) -> list: ...
+def to_list(ph: str) -> list:
+    ...
 
 
 @overload
-def to_list(ph: list) -> list: ...
+def to_list(ph: list) -> list:
+    ...
 
 
 def to_list(ph: str or list) -> list or None:
@@ -74,7 +78,7 @@ def to_list(ph: str or list) -> list or None:
 
     # If space delimited string, convert to list
     if isinstance(ph, str):
-        return ph.split(' ')
+        return ph.split(" ")
 
     # If nested list, convert each element
     if isinstance(ph, list):
@@ -86,7 +90,7 @@ def to_list(ph: str or list) -> list or None:
             return to_list(ph[0])  # Recursive call
 
     # Error if no matches
-    raise TypeError('to_list() expects a list or string')
+    raise TypeError("to_list() expects a list or string")
 
 
 # Surrounds text with curly brackets
@@ -97,4 +101,4 @@ def with_cb(text: str) -> str:
     :param text: Text to surround
     :return: Surrounded text
     """
-    return '{' + text + '}'
+    return "{" + text + "}"

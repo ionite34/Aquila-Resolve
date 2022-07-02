@@ -16,4 +16,10 @@ def replace_first(target: str, replacement: str, text: str) -> str:
         return text  # Return original if no target or text
     # Replace the first instance of a word with its phonemes
     # return re.sub(r'(?i)\b' + target + r'\b', replacement, text, 1)
-    return re.sub(r'(?<!\{)\b' + target + r'\b(?![\w\s]*[}])', replacement, text, count=1, flags=re.IGNORECASE)
+    return re.sub(
+        r"(?<!\{)\b" + target + r"\b(?![\w\s]*[}])",
+        replacement,
+        text,
+        count=1,
+        flags=re.IGNORECASE,
+    )

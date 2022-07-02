@@ -13,7 +13,7 @@ class Dictionary:
         # If a file name is not provided, use the default file name
         self.file_name = file_name
         if self.file_name is None:
-            self.file_name = 'heteronyms.json'
+            self.file_name = "heteronyms.json"
         self.dictionary = {}
         self.dictionary = self.load_dictionary(file_name)
 
@@ -22,15 +22,15 @@ class Dictionary:
         if path is None:
             path = DATA_PATH.joinpath(self.file_name)
         if not exists(path):
-            raise FileNotFoundError(f'Dictionary {self.file_name} file not found')
+            raise FileNotFoundError(f"Dictionary {self.file_name} file not found")
         with open(str(path)) as file:
             try:
                 read_dict = json.load(file)
             except json.decoder.JSONDecodeError:
-                raise ValueError(f'Dictionary {self.file_name} file is not valid JSON')
+                raise ValueError(f"Dictionary {self.file_name} file is not valid JSON")
         # Check dictionary has at least one entry
         if len(read_dict) == 0:
-            raise ValueError('Dictionary is empty or invalid')
+            raise ValueError("Dictionary is empty or invalid")
         return read_dict
 
     # Check if a word is in the dictionary
@@ -56,8 +56,8 @@ class Dictionary:
                 return sub_dict[parent_pos]
 
         # If not, check if the sub_dict contains a DEFAULT key
-        if 'DEFAULT' in sub_dict:
-            return sub_dict['DEFAULT']
+        if "DEFAULT" in sub_dict:
+            return sub_dict["DEFAULT"]
 
         # If no matches, return None
         return None

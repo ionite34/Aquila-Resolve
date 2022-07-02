@@ -11,18 +11,24 @@ ex_lines = [
 ex_expected_results = [
     "The cat {R EH1 D} the book. It was a good book to {R IY1 D}.",
     "You should {AH1 B S AE1 N T} yourself from the meeting. Then you would be {AE1 B S AH0 N T}.",
-    "The machine would automatically {R IH0 JH EH1 K T} products. These were the {R IY1 JH EH0 K T} products."
+    "The machine would automatically {R IH0 JH EH1 K T} products. These were the {R IY1 JH EH0 K T} products.",
 ]
 
 
 # Test the contains_het function
-@pytest.mark.parametrize("line, expected", [
-    ("The cat read the book. It was a good book to read.", True),
-    ("The effect was absent.", True),
-    ("Symbols like !, ?, and ;", False),
-    ("The product was a reject.", True),
-    ("", False), (" ", False), ("\n", False), ("\t", False)
-])
+@pytest.mark.parametrize(
+    "line, expected",
+    [
+        ("The cat read the book. It was a good book to read.", True),
+        ("The effect was absent.", True),
+        ("Symbols like !, ?, and ;", False),
+        ("The product was a reject.", True),
+        ("", False),
+        (" ", False),
+        ("\n", False),
+        ("\t", False),
+    ],
+)
 def test_contains_het(h2p, line, expected):
     assert h2p.contains_het(line) == expected
 

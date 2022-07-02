@@ -9,5 +9,5 @@ class catch_time:
 
     def __exit__(self, ex_type, ex_value, traceback):
         self.time = time.perf_counter_ns() - self.time
-        self.readout = f'Time: {(self.time / 1e6):.4f} ms'
+        self.readout = f"Time: {(self.time / 1e6):.4f} ms"
         print(self.readout)

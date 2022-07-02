@@ -16,26 +16,29 @@ cde_expected_results = [
     "{DH EH1 N} {Y UW1} {W UH1 D} {B IY1} {AE1 B S AH0 N T}.",
     "{DH AH0} {M AH0 SH IY1 N} {W UH1 D} {AO2 T AH0 M AE1 T IH0 K L IY0} {R IH0 JH EH1 K T} "
     "{P R AA1 D AH0 K T S}. {DH IY1 Z} {W ER1} {DH AH0} {R IY1 JH EH0 K T} {P R AA1 D AH0 K T S}.",
-    "{DH AH0} {K AE1 T} {R IY1 D} {DH AH0} {B UH1 K}."  # Test Phoneme Escape
+    "{DH AH0} {K AE1 T} {R IY1 D} {DH AH0} {B UH1 K}.",  # Test Phoneme Escape
 ]
 
 
 # G2p Creation
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def g2p() -> G2p:
     g2p = G2p()
     yield g2p
 
 
 # Test for lookup method
-@pytest.mark.parametrize("word, phoneme", [
-    ('cat', 'K AE1 T'),
-    ('CaT', 'K AE1 T'),
-    ('CAT', 'K AE1 T'),
-    ('test', 'T EH1 S T'),
-    ('testers', 'T EH1 S T ER0 Z'),
-    ('testers(2)', 'T EH1 S T AH0 Z'),
-])
+@pytest.mark.parametrize(
+    "word, phoneme",
+    [
+        ("cat", "K AE1 T"),
+        ("CaT", "K AE1 T"),
+        ("CAT", "K AE1 T"),
+        ("test", "T EH1 S T"),
+        ("testers", "T EH1 S T ER0 Z"),
+        ("testers(2)", "T EH1 S T AH0 Z"),
+    ],
+)
 def test_lookup(g2p, word, phoneme):
     assert g2p.lookup(word) == phoneme
 
@@ -47,13 +50,16 @@ def test_convert(g2p, line, ph_line):
 
 
 # Test for convert format exception
-@pytest.mark.parametrize("case", [
-    "The cat {R {IY1 D} the} book.",
-    "The cat {R {IY1 D the} book.",
-    "The cat {R IY1 D} the} book.",
-    "The cat {R IY1 D the book.",
-    "The cat R IY1 D} the book.",
-])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "The cat {R {IY1 D} the} book.",
+        "The cat {R {IY1 D the} book.",
+        "The cat {R IY1 D} the} book.",
+        "The cat {R IY1 D the book.",
+        "The cat R IY1 D} the book.",
+    ],
+)
 def test_convert_ex_format(g2p, case):
     with pytest.raises(ValueError):
         g2p.convert(case)

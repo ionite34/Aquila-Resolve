@@ -9,10 +9,10 @@ sys.path.insert(0, str(MODELS_PATH))
 
 
 class Infer:
-    def __init__(self, device='cpu'):
+    def __init__(self, device="cpu"):
         ensure_download()  # Download checkpoint if necessary
         self.model = Phonemizer.from_checkpoint(PT_FILE, device=device)
-        self.lang = 'en_us'
+        self.lang = "en_us"
         self.batch_size = 32
 
     def __call__(self, text: list[str]) -> list[str]:
@@ -21,7 +21,9 @@ class Infer:
         :param text: list of words
         :return: dict of {word: phonemes}
         """
-        res = self.model.phonemise_list(text, lang=self.lang, batch_size=self.batch_size).phonemes
+        res = self.model.phonemise_list(
+            text, lang=self.lang, batch_size=self.batch_size
+        ).phonemes
         # Replace all occurrences of '][' with spaces, remove remaining brackets
-        res = [r.replace('][', ' ').replace('[', '').replace(']', '') for r in res]
+        res = [r.replace("][", " ").replace("[", "").replace("]", "") for r in res]
         return res

@@ -18,81 +18,99 @@ def pc():
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("CLUKNM", None),
-    ("Butch's", "B UH1 CH IH0 Z"),  # Case 1
-    ("Rose's", "R OW1 Z IH0 Z"),
-    ("Fay's", "F EY1 Z"),  # Case 2
-    ("Paul's", "P AO1 L Z"),
-    ("Hope's", "HH OW1 P S"),  # Case 3
-    ("Ruth's", "R UW1 TH S"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("CLUKNM", None),
+        ("Butch's", "B UH1 CH IH0 Z"),  # Case 1
+        ("Rose's", "R OW1 Z IH0 Z"),
+        ("Fay's", "F EY1 Z"),  # Case 2
+        ("Paul's", "P AO1 L Z"),
+        ("Hope's", "HH OW1 P S"),  # Case 3
+        ("Ruth's", "R UW1 TH S"),
+    ],
+)
 def test_auto_possessives(pc_no_inf, word, expected):
     result = pc_no_inf.auto_possessives(word)
     assert result == expected
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("UNKN'll", None),
-    ("System'll", "S IH1 S T AH0 M AH0 L"),
-    ("Cyprus'll", "S AY1 P R AH0 S AH0 L"),
-    ("Victory'd", "V IH1 K T ER0 IY0 D"),
-    ("Such'd", "S AH1 CH D"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("UNKN'll", None),
+        ("System'll", "S IH1 S T AH0 M AH0 L"),
+        ("Cyprus'll", "S AY1 P R AH0 S AH0 L"),
+        ("Victory'd", "V IH1 K T ER0 IY0 D"),
+        ("Such'd", "S AH1 CH D"),
+    ],
+)
 def test_auto_contractions(pc_no_inf, word, expected):
     result = pc_no_inf.auto_contractions(word)
     assert result == expected
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("UNKN-UNKNV", None),
-    ("Get-a-toy", "G EH1 T AH0 T OY1"),
-    ("G-to-P", "JH IY1 T UW1 P IY1"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("UNKN-UNKNV", None),
+        ("Get-a-toy", "G EH1 T AH0 T OY1"),
+        ("G-to-P", "JH IY1 T UW1 P IY1"),
+    ],
+)
 def test_auto_hyphenated(pc_no_inf, word, expected):
     result = pc_no_inf.auto_hyphenated(word)
     assert result == expected
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("UNKNUNKNV", None),
-    ("Getatoy", None),  # Unresolvable due to presense of single letter (a)
-    ("JetBrains", "JH EH1 T B R EY1 N Z"),
-    ("Superfreeze", "S UW1 P ER0 F R IY1 Z"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("UNKNUNKNV", None),
+        ("Getatoy", None),  # Unresolvable due to presense of single letter (a)
+        ("JetBrains", "JH EH1 T B R EY1 N Z"),
+        ("Superfreeze", "S UW1 P ER0 F R IY1 Z"),
+    ],
+)
 def test_auto_compound(pc_no_inf, word, expected):
     result = pc_no_inf.auto_compound(word)
     assert result == expected
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("UNKNs", None),
-    ("Whites", "W AY1 T S"),
-    ("Oranges", "AO1 R AH0 N JH IH0 Z"),
-    ("MarkZeroes", "M AA1 R K Z IH1 R OW0 Z"),
-    ("TrueCods", "T R UW1 K AA1 D Z"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("UNKNs", None),
+        ("Whites", "W AY1 T S"),
+        ("Oranges", "AO1 R AH0 N JH IH0 Z"),
+        ("MarkZeroes", "M AA1 R K Z IH1 R OW0 Z"),
+        ("TrueCods", "T R UW1 K AA1 D Z"),
+    ],
+)
 def test_auto_plural(pc_no_inf, word, expected):
     result = pc_no_inf.auto_plural(word)
     assert result == expected
 
 
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ("unkning", None),
-    ("unkningly", None),
-    ("unknly", None),
-    ("Cryoray", None),
-    ("Codsly", "K AA1 D Z L IY0"),
-    ("Divinationly", "D IH2 V AH0 N EY1 SH AH0 N L IY0"),
-    ("Superfreezing", "S UW1 P ER0 F R IY1 Z IH0 NG"),
-    ("SuperDivining", "S UW1 P ER0 D IH0 V AY1 N IH0 NG"),
-    ("SuperSuching", "S UW1 P ER0 S AH1 CH IH0 NG"),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("unkning", None),
+        ("unkningly", None),
+        ("unknly", None),
+        ("Cryoray", None),
+        ("Codsly", "K AA1 D Z L IY0"),
+        ("Divinationly", "D IH2 V AH0 N EY1 SH AH0 N L IY0"),
+        ("Superfreezing", "S UW1 P ER0 F R IY1 Z IH0 NG"),
+        ("SuperDivining", "S UW1 P ER0 D IH0 V AY1 N IH0 NG"),
+        ("SuperSuching", "S UW1 P ER0 S AH1 CH IH0 NG"),
+    ],
+)
 def test_auto_stem(pc_no_inf, word, expected):
     result = pc_no_inf.auto_stem(word)
     assert result == expected
@@ -100,9 +118,12 @@ def test_auto_stem(pc_no_inf, word, expected):
 
 # Test Inference
 # noinspection SpellCheckingInspection
-@pytest.mark.parametrize("word, expected", [
-    ('Cryoray', 'K R IY1 OW0 R EY1'),
-])
+@pytest.mark.parametrize(
+    "word, expected",
+    [
+        ("Cryoray", "K R IY1 OW0 R EY1"),
+    ],
+)
 def test_inference(pc, word, expected):
     result = pc.auto_compound(word)
     assert result == expected
