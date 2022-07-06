@@ -2,6 +2,7 @@
 import Aquila_Resolve
 from InquirerPy import inquirer
 from InquirerPy.utils import color_print as cp
+import sys
 from yaspin import yaspin
 
 
@@ -10,7 +11,7 @@ def main_menu():
     Aquila Resolve Entry Point
     """
     g2p_convert()
-    exit(0)
+    sys.exit(0)
 
 
 def g2p_convert():  # pragma: no cover
