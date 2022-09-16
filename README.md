@@ -18,7 +18,7 @@ analysis for correct inferencing of [English Heteronyms](https://en.wikipedia.or
 
 The package is offered in a pre-trained state that is ready for [usage](#Usage) as a dependency or in
 notebook environments. There are no additional resources needed, other than the model checkpoint which is
-automatically downloaded on the first usage. See [Installation](#Installation) more information.
+automatically downloaded on the first usage. See [Installation](#Installation) for more information.
 
 ### 1. Dynamic Word Mappings based on context:
 
