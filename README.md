@@ -97,7 +97,7 @@ A simple wrapper for text conversion is available through the `aquila-resolve` c
 ```
 ~
 ❯ aquila-resolve
-✔ Aquila Resolve v0.1.2
+✔ Aquila Resolve v0.1.4
 ? Text to convert: I read the book, did you read it?
 {AY1} {R EH1 D} {DH AH0} {B UH1 K}, {D IH1 D} {Y UW1} {R IY1 D} {IH1 T}?
 ```
